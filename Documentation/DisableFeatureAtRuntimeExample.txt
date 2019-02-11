@@ -1,0 +1,7 @@
+This is an example of how to disable a feature at runtime
+
+PackageManager pm = getPackageManager();
+if (!pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_COMPASS)) {
+    // This device does not have a compass, turn off the compass feature
+    disableCompassFeature();
+}
