@@ -25,4 +25,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void toSignUpScreen(View view){
+        Intent intent = new Intent(this, signUpScreen.class);
+        startActivity(intent);
+    }
 }

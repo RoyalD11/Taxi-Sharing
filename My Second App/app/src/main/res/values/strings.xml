@@ -3,4 +3,32 @@
     <string name="button_send">Login</string>
     <string name="enter_username">Email</string>
     <string name="enter_password">Password</string>
+    <string-array name="age_spinner">
+        <item> 18 and Younger</item>
+        <item> 19 - 30 </item>
+        <item> 31 - 50 </item>
+        <item> 51 - 70 </item>
+        <item> 71 and Older </item>
+    </string-array>
+    <string-array name="gender_spinner">
+        <item> Male</item>
+        <item> Female </item>
+        <item> Other </item>
+    </string-array>
+    <string-array name="Q1_spinner">
+        <item> Answer</item>
+        <item> Yes </item>
+        <item> No </item>
+    </string-array>
+    <string-array name="Q2_spinner">
+        <item> Answer</item>
+        <item> Yes </item>
+        <item> No </item>
+        <item> No, but I do not mind </item>
+    </string-array>
+    <string-array name="Q3_spinner">
+        <item> Answer</item>
+        <item> Yes </item>
+        <item> No </item>
+    </string-array>
 </resources>
