@@ -360,6 +360,13 @@
                     android:textColor="@color/common_google_signin_btn_text_dark_default" />
             </RelativeLayout>
 
+            <View
+                android:id="@+id/divider11"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="invisible" />
+
         </LinearLayout>
     </ScrollView>
 
