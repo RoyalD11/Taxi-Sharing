@@ -1,9 +1,13 @@
 package com.example.royald.mysecondapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 public class signUpScreen extends AppCompatActivity {
@@ -13,6 +17,9 @@ public class signUpScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_screen);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN); //Setting so that the screen focuses the input field you are currently on
+
+        ImageView image = (ImageView) findViewById(R.id.profilePictureSignUp);
+        image.setImageResource(R.drawable.userimage);
 
         Spinner ageSpinner = (Spinner) findViewById(R.id.ageRangeSpinner);
         Spinner genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
@@ -43,6 +50,13 @@ public class signUpScreen extends AppCompatActivity {
         q1Spinner.setAdapter(q1Adapter);
         q2Spinner.setAdapter(q2Adapter);
         q3Spinner.setAdapter(q3Adapter);
+
+    }
+
+    /* called when the user taps Send*/
+    public void createAccount(View view){
+        Intent intent = new Intent(this, PreMatchActivity.class);
+        startActivity(intent);
 
     }
 }

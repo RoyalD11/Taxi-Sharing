@@ -17,17 +17,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* called when the user taps Send*/
-    public void sendMessage(View view){
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
+    public void login(View view){
+        Intent intent = new Intent(this, PreMatchActivity.class);
         EditText editText = (EditText) findViewById(R.id.EmailBox);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
 
     }
 
+    //Called when user hits sign up button
     public void toSignUpScreen(View view){
         Intent intent = new Intent(this, signUpScreen.class);
+        startActivity(intent);
+    }
+
+    //Called when user hits forgot password button
+    public void toForgotPasswordScreen(View view){
+        Intent intent = new Intent(this, forgotPasswordActivity.class);
         startActivity(intent);
     }
 }
