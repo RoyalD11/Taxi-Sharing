@@ -38,9 +38,9 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // Add a marker in Ottawa at the airport and move the camera
+        LatLng ottawa = new LatLng(45.32, -75.66);
+        mMap.addMarker(new MarkerOptions().position(ottawa).title("Ottawa International Airport"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(ottawa));
     }
 }
