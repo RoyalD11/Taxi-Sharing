@@ -81,17 +81,32 @@ public class signUpScreen extends AppCompatActivity {
         String currentQ3Answer = q3Spinner.getSelectedItem().toString();
 
         //If-statement used to check if all fields have something entered in them
-        if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
-        else if(TextUtils.isEmpty(confirmEmail.getText()) || !(email.getText().toString().equals(confirmEmail.getText().toString()))) confirmEmail.setError("Email must match!");
-        else if(TextUtils.isEmpty(password.getText())) password.setError("Password is Required!");
-        else if(TextUtils.isEmpty(confirmPassword.getText()) || !(password.getText().toString().equals(confirmPassword.getText().toString()))) confirmPassword.setError("Password must match!");
+        if(TextUtils.isEmpty(email.getText()))
+            email.setError("Email is required!");
 
-        else if (TextUtils.isEmpty(firstName.getText())) firstName.setError("First Name is Required!");
-        else if (TextUtils.isEmpty(lastName.getText())) lastName.setError("Last Name is Required!");
+        else if(TextUtils.isEmpty(confirmEmail.getText()) || !(email.getText().toString().equals(confirmEmail.getText().toString())))
+            confirmEmail.setError("Email must match!");
 
-        else if(TextUtils.isEmpty(phoneNumber.getText())) phoneNumber.setError("Phone Number is Required");
+        else if(TextUtils.isEmpty(password.getText()))
+            password.setError("Password is Required!");
 
-        else if(TextUtils.isEmpty(creditCard.getText())) creditCard.setError("Credit Card Number is Required");
+        else if(TextUtils.isEmpty(confirmPassword.getText()) || !(password.getText().toString().equals(confirmPassword.getText().toString())))
+            confirmPassword.setError("Password must match!");
+
+
+        else if (TextUtils.isEmpty(firstName.getText()))
+            firstName.setError("First Name is Required!");
+
+        else if (TextUtils.isEmpty(lastName.getText()))
+            lastName.setError("Last Name is Required!");
+
+
+        else if(TextUtils.isEmpty(phoneNumber.getText()))
+            phoneNumber.setError("Phone Number is Required");
+
+        else if(TextUtils.isEmpty(creditCard.getText()))
+            creditCard.setError("Credit Card Number is Required");
+
 
         //These three branches will make sure that a valid option is chosen from the matching question spinners.
         else if(currentQ1Answer.equals(compareValue)){

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
         else if(TextUtils.isEmpty(password.getText())) password.setError("Password is Required!");
         else {
-            Intent intent = new Intent(this, PreMatchActivity.class);
+           Intent intent = new Intent(this, PreMatchActivity.class);
             startActivity(intent);
         }
 
