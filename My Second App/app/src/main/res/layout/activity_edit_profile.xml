@@ -20,58 +20,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/signUpTitle"
-                android:layout_width="match_parent"
-                android:layout_height="69dp"
-                android:text="Taxi Sharing"
-                android:textAlignment="center"
-                android:textSize="36sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/createNewAccount"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="  Create New Account"
-                android:textSize="24sp"
+                android:text="Edit Account Information"
+                android:textAlignment="center"
+                android:textSize="30sp"
                 android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/emailSignUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
-
-            <EditText
-                android:id="@+id/emailReEnterSignUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Re-Enter Email"
-                android:inputType="textEmailAddress" />
-
-            <EditText
-                android:id="@+id/passwordSignUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword" />
-
-            <EditText
-                android:id="@+id/passwordlReEnterSignUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Confirm Password"
-                android:inputType="textPassword" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="30dp"
                 android:background="?android:attr/listDivider"
                 android:visibility="invisible" />
 
@@ -355,8 +315,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="0dp"
                     android:background="@color/colorPrimary"
-                    android:onClick="createAccount"
-                    android:text="Create Account"
+                    android:onClick="toUserProfile"
+                    android:text="Return To Profile"
                     android:textColor="@color/common_google_signin_btn_text_dark_default" />
             </RelativeLayout>
 

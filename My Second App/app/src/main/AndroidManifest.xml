@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.royald.mysecondapp">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,18 +19,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PreMatchActivity"
-            android:parentActivityName=".MainActivity">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
             android:name=".signUpScreen"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden"> <!-- setting so that the first input field is not automatically active -->
+
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
@@ -44,7 +38,43 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
+        <activity
+            android:name=".PreMatchActivity"
+            android:label="My Taxi Sharing"
+            android:parentActivityName=".MainActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".UserProfile"
+            android:label="My Taxi Sharing"
+            android:parentActivityName=".PreMatchActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PreMatchActivity" />
+        </activity>
+        <activity
+            android:name=".EditProfile"
+            android:label="My Taxi Sharing"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 
