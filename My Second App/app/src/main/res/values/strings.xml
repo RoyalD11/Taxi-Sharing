@@ -32,4 +32,5 @@
         <item> No </item>
     </string-array>
     <string name="title_activity_pre_match">Map</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

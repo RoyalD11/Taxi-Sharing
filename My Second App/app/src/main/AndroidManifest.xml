@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.royald.mysecondapp">
 
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -12,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,13 +53,28 @@
 
         <activity
             android:name=".PreMatchActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="My Taxi Sharing">
+            android:label="My Taxi Sharing"
+            android:parentActivityName=".MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".UserProfile"
+            android:label="My Taxi Sharing"
+            android:parentActivityName=".PreMatchActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PreMatchActivity" />
+        </activity>
+        <activity
+            android:name=".EditProfile"
+            android:label="My Taxi Sharing"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 

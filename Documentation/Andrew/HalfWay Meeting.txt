@@ -1,0 +1,43 @@
+look into cost google has a thing to calculate point to point for a taxi
+	add a field to check if the discount is worth the sharing ride element
+	peak times vs regular, solo vs sharing
+
+the driver has to accept all rides, the passengers can choose to decline, or vice versa, choose one
+
+add a driver field to say how much lugage you can carry
+focus on back end flow, passing of information between the two apps
+matching itself isnt a priority, get the information passing between
+
+meeting point post 5 airport
+
+decline ride, add an option to re-match if they want to decline, and then add an option to specify
+	if they want to keep the driver and not match with passenger
+	if they want a new driver 
+	if they want a new everything
+
+
+User information can be saved to the phone, dont have to worry about phone payment, 
+	driver can be paid in cash, or they could have a wireless debit in the car for payment
+	dont worry about app taking a cut
+
+goal to have a seperate server that can comunicate through driver app and multiple passengers
+	GET MULTIPLE PASSENGERS WORKING, HOW DO I DO THIS
+
+
+
+Report - Refer to the thesis example Doron sent
+	start right now
+
+	write motivation, background, program working in, what weve done
+	backgound other apps, background what we are using, tech using
+	what we did what we worked on, issues, overcoming troubles
+	actual app, what was implemented,
+	conclusions
+	bibliography, every source used and refereced, both research and code help
+
+
+	I should have an interaction diagram, to show sending of information 
+	comment the code!!!!!!!
+
+	This is joint, reference Moh in the project can even use screen shots from him
+	we may have incredibly similar parts

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -80,18 +81,18 @@ public class signUpScreen extends AppCompatActivity {
         String currentQ2Answer = q2Spinner.getSelectedItem().toString();
         String currentQ3Answer = q3Spinner.getSelectedItem().toString();
 
-        //If-statement used to check if all fields have something entered in them
-        if(TextUtils.isEmpty(email.getText()))
-            email.setError("Email is required!");
+        //If-statement used to check if all fields are valid
+        if(TextUtils.isEmpty(email.getText()) || !isEmailValid(email.getText().toString()))
+            email.setError("Valid Email is required!");
 
         else if(TextUtils.isEmpty(confirmEmail.getText()) || !(email.getText().toString().equals(confirmEmail.getText().toString())))
-            confirmEmail.setError("Email must match!");
+            confirmEmail.setError("Emails must match!");
 
         else if(TextUtils.isEmpty(password.getText()))
             password.setError("Password is Required!");
 
         else if(TextUtils.isEmpty(confirmPassword.getText()) || !(password.getText().toString().equals(confirmPassword.getText().toString())))
-            confirmPassword.setError("Password must match!");
+            confirmPassword.setError("Passwords must match!");
 
 
         else if (TextUtils.isEmpty(firstName.getText()))
@@ -101,11 +102,11 @@ public class signUpScreen extends AppCompatActivity {
             lastName.setError("Last Name is Required!");
 
 
-        else if(TextUtils.isEmpty(phoneNumber.getText()))
-            phoneNumber.setError("Phone Number is Required");
+        else if(TextUtils.isEmpty(phoneNumber.getText()) || isPhoneValid(phoneNumber.getText().toString()))
+            phoneNumber.setError("Valid Phone Number is Required");
 
-        else if(TextUtils.isEmpty(creditCard.getText()))
-            creditCard.setError("Credit Card Number is Required");
+        else if(TextUtils.isEmpty(creditCard.getText()) || !isCreditValid(creditCard.getText().toString()))
+            creditCard.setError("Valid Credit Card Number is Required");
 
 
         //These three branches will make sure that a valid option is chosen from the matching question spinners.
@@ -128,10 +129,27 @@ public class signUpScreen extends AppCompatActivity {
             errorText.setText("Invalid.");//changes the selected item text to this
         }
 
-
+        //If all field are valid the button will start the new activity
         else {
             Intent intent = new Intent(this, PreMatchActivity.class);
             startActivity(intent);
         }
+    }
+
+    //Returns true is the email is valid
+    boolean isEmailValid(CharSequence emailString){
+        return Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
+    }
+
+    //Returns true is the phone number is valid
+    boolean isPhoneValid(String phoneString){
+        if(phoneString.length() <  10 || phoneString.length() > 11) return true;
+        return false;
+    }
+
+    //Returns true is the phone number is valid
+    boolean isCreditValid(String creditString){
+        if(creditString.length() == 16) return true;
+        return false;
     }
 }

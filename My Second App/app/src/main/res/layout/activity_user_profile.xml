@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserProfile">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="750dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="204dp">
+
+            <TextView
+                android:id="@+id/editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="319dp"
+                android:layout_marginTop="34dp"
+                android:text="Edit"
+                android:textAlignment="textStart" />
+
+            <ImageButton
+                android:id="@+id/editProfileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="304dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="@android:drawable/screen_background_light_transparent"
+                android:onClick="toEditProfile"
+                android:tint="@color/common_google_signin_btn_text_light_focused"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <TextView
+                android:id="@+id/profileTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:text="User Profile"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider12"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="40dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="181dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="89dp"
+                android:layout_marginTop="65dp"
+                android:layout_marginEnd="90dp"
+                app:srcCompat="@drawable/userimage" />
+
+            <TextView
+                android:id="@+id/nameText"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="194dp"
+                android:text="Name................................."
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/ratingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/profileImage"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="178dp"
+                android:layout_marginEnd="62dp"
+                android:layout_marginBottom="-2dp"
+                android:text="Rating"
+                android:textStyle="bold" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@android:style/Widget.Material.Light.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="196dp"
+                android:layout_marginEnd="42dp"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="2.5"
+                android:visibility="visible" />
+
+            <View
+                android:id="@+id/divider13"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="220dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/emailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="29dp"
+                android:layout_marginTop="244dp"
+                android:text="Email:"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="273dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="9dp"
+                android:layout_marginTop="244dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toEndOf="@+id/emailTitle"
+                android:text="Email........................................."
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/ageTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/emailTitle"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="283dp"
+                android:text="Age:"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/ageText"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="283dp"
+                android:layout_marginEnd="191dp"
+                android:layout_toEndOf="@+id/ageTitle"
+                android:text="Age.........."
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/genderTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/ageTitle"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="11dp"
+                android:layout_toStartOf="@+id/genderText"
+                android:text="Gender:"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/genderText"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="283dp"
+                android:layout_marginEnd="14dp"
+                android:text="Gender........"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/phoneTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/genderTitle"
+                android:layout_alignEnd="@+id/ageText"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="1dp"
+                android:text="Phone Number:"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/phoneText"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/genderTitle"
+                android:layout_alignTop="@+id/phoneTitle"
+                android:text="Phone......................"
+                android:textSize="18sp" />
+
+            <View
+                android:id="@+id/divider14"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="350dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/question1"
+                android:layout_width="224dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/matchingQuestionsText2"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="0dp"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:text="Are you willing to ride with someone of a different gender?"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/matchingQuestionsText2"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:layout_below="@+id/divider14"
+                android:layout_alignParentStart="true"
+                android:text="  Matching Questions"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/q1AnswerText"
+                android:layout_width="87dp"
+                android:layout_height="27dp"
+                android:layout_alignBottom="@+id/question1"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="27dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/question1"
+                android:text="Answer....."
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/question2"
+                android:layout_width="132dp"
+                android:layout_height="24dp"
+                android:layout_alignTop="@+id/q2AnswerText"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="1dp"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:text="Do you smoke?"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/q2AnswerText"
+                android:layout_width="87dp"
+                android:layout_height="27dp"
+                android:layout_alignBottom="@+id/question1"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="27dp"
+                android:layout_marginBottom="-36dp"
+                android:layout_toEndOf="@+id/question1"
+                android:text="Answer....."
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/question3"
+                android:layout_width="226dp"
+                android:layout_height="41dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="502dp"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:text="Are you willing to ride with animals?"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/q3AnswerText"
+                android:layout_width="87dp"
+                android:layout_height="27dp"
+                android:layout_alignBottom="@+id/question1"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="21dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="-75dp"
+                android:layout_toEndOf="@+id/question1"
+                android:text="Answer....."
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/signOutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="132dp"
+                android:layout_marginTop="566dp"
+                android:layout_marginEnd="140dp"
+                android:background="@color/colorPrimary"
+                android:text="Sign Out"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/deleteProfileButton"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="117dp"
+                android:layout_marginTop="671dp"
+                android:background="@color/colorPrimary"
+                android:text="Delete Profile"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

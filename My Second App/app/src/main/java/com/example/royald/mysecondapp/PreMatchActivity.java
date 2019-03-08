@@ -1,12 +1,16 @@
 package com.example.royald.mysecondapp;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -29,7 +33,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * we just add a marker near Ottawa, Canada.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -41,6 +45,13 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         // Add a marker in Ottawa at the airport and move the camera
         LatLng ottawa = new LatLng(45.32, -75.66);
         mMap.addMarker(new MarkerOptions().position(ottawa).title("Ottawa International Airport"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(ottawa));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(ottawa).zoom(14.0f).build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        mMap.moveCamera(cameraUpdate);
+    }
+
+    public void toUserProfile(View view){
+        Intent intent = new Intent(this, UserProfile.class);
+        startActivity(intent);
     }
 }
