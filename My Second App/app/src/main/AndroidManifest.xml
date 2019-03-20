@@ -74,8 +74,8 @@
         <activity
             android:name=".EditProfile"
             android:label="My Taxi Sharing"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".testActivity"></activity>
     </application>
 
 </manifest>

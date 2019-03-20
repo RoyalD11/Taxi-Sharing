@@ -32,5 +32,24 @@
         <item> No </item>
     </string-array>
     <string name="title_activity_pre_match">Map</string>
-    <string name="title_activity_maps">Map</string>
+    <string-array name="promptQ1">
+        <item> 0</item>
+        <item> 1 </item>
+        <item> 2 </item>
+        <item> 3+ </item>
+    </string-array>
+    <string-array name="promptQ2">
+        <item> No</item>
+        <item> Yes</item>
+    </string-array>
+    <string-array name="promptQ3">
+        <item> 0</item>
+        <item> 1 </item>
+        <item> 2 </item>
+        <item> 3 </item>
+    </string-array>
+    <string-array name="promptQ4">
+        <item> 1</item>
+        <item> 2 </item>
+    </string-array>
 </resources>

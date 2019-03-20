@@ -5,6 +5,7 @@ import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,10 +23,16 @@ public class forgotPasswordActivity extends AppCompatActivity {
         EditText email = (EditText) findViewById(R.id.forgotPasswordEmailInput);
 
         //The email field needs to be populated in order to press the button.
-        if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
+        if(TextUtils.isEmpty(email.getText()) || !isEmailValid(email.getText().toString()))
+            email.setError("Valid Email is required!");
         else {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    //Returns true is the email is valid
+    boolean isEmailValid(CharSequence emailString){
+        return Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
     }
 }

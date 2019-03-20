@@ -3,7 +3,15 @@ package com.example.royald.mysecondapp;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +34,28 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        Spinner promptQ1Spin = (Spinner) findViewById(R.id.promptQ1Spinner);
+        ArrayAdapter<CharSequence> promptQ1Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ1, android.R.layout.simple_spinner_item);
+        promptQ1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        promptQ1Spin.setAdapter(promptQ1Adapter);
+
+        Spinner promptQ2Spin = (Spinner) findViewById(R.id.promptQ2Spinner);
+        ArrayAdapter<CharSequence> promptQ2Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ2, android.R.layout.simple_spinner_item);
+        promptQ2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        promptQ2Spin.setAdapter(promptQ2Adapter);
+
+        Spinner promptQ3Spin = (Spinner) findViewById(R.id.promptQ3Spinner);
+        ArrayAdapter<CharSequence> promptQ3Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ3, android.R.layout.simple_spinner_item);
+        promptQ3Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        promptQ3Spin.setAdapter(promptQ3Adapter);
+
+        Spinner promptQ4Spin = (Spinner) findViewById(R.id.promptQ4Spinner);
+        ArrayAdapter<CharSequence> promptQ4Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ4, android.R.layout.simple_spinner_item);
+        promptQ4Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        promptQ4Spin.setAdapter(promptQ4Adapter);
+
     }
 
 
@@ -53,5 +83,30 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void toUserProfile(View view){
         Intent intent = new Intent(this, UserProfile.class);
         startActivity(intent);
+    }
+
+    public void displayPrompt(View view){
+        EditText destination = (EditText) findViewById(R.id.enterDestination);
+
+        if(TextUtils.isEmpty(destination.getText())) destination.setError("Destination is required!");
+        else {
+            ((ImageButton) findViewById(R.id.userProfileButton)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.profileText)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.destinationText)).setVisibility(View.GONE);
+            ((EditText) findViewById(R.id.enterDestination)).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.findMatch)).setVisibility(View.GONE);
+
+            (findViewById(R.id.findMatchPromptView)).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void removePrompt(View view){
+        (findViewById(R.id.findMatchPromptView)).setVisibility(View.GONE);
+
+        ((ImageButton) findViewById(R.id.userProfileButton)).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.profileText)).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.destinationText)).setVisibility(View.VISIBLE);
+        ((EditText) findViewById(R.id.enterDestination)).setVisibility(View.VISIBLE);
+        ((Button) findViewById(R.id.findMatch)).setVisibility(View.VISIBLE);
     }
 }
