@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginButton = (Button) findViewById(R.id.LoginButton);
 
+        //Waits for the login button to be pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,11 +65,15 @@ public class MainActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
                 else if(TextUtils.isEmpty(password.getText())) password.setError("Password is Required!");
 
-                    //Checks the database to see if the username and pass provided is valid, displays an error if it is not valid, sends a signal to onAuthStateChanged if valid
+                //Checks the database to see if the username and pass provided is valid, displays an error if it is not valid, sends a signal to onAuthStateChanged if valid
                 else {
+
+                    //Attempt to sign in with provided email and password
                     mAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            //If sign in fails post a toast to the screen
                             if(!task.isSuccessful()){
                                 Toast.makeText(MainActivity.this, "Sign In Error", Toast.LENGTH_SHORT).show();
                                 task.getException().printStackTrace();
@@ -92,12 +97,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //Starts the listener
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
     }
 
+    //Stops the listener
     @Override
     protected void onStop(){
         super.onStop();

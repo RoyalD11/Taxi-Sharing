@@ -30,6 +30,7 @@ import java.util.Map;
 
 public class signUpScreen extends AppCompatActivity {
 
+    //All variables needed
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
@@ -46,9 +47,8 @@ public class signUpScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_screen);
 
+        //get the current state of the firebaseAuth
         mAuth = FirebaseAuth.getInstance();
-
-        createAccount = (Button) findViewById(R.id.createAccountButton);
 
         //If user provides valid log in information this will log them into the app and change the screen
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -64,11 +64,14 @@ public class signUpScreen extends AppCompatActivity {
             }
         };
 
+        //Sets the input mode so that the first field is not automatically selected
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN); //Setting so that the screen focuses the input field you are currently on
 
+        //Set the user image on the screen
         ImageView image = (ImageView) findViewById(R.id.profilePictureSignUp);
         image.setImageResource(R.drawable.userimage);
 
+        //Declare the Spinners
         Spinner ageSpinner = (Spinner) findViewById(R.id.ageRangeSpinner);
         Spinner genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
         Spinner q1Spinner = (Spinner) findViewById(R.id.Q1Spinner);
@@ -82,14 +85,12 @@ public class signUpScreen extends AppCompatActivity {
         ArrayAdapter<CharSequence> q2Adapter = ArrayAdapter.createFromResource(this, R.array.Q2_spinner, android.R.layout.simple_spinner_item);
         ArrayAdapter<CharSequence> q3Adapter = ArrayAdapter.createFromResource(this, R.array.Q3_spinner, android.R.layout.simple_spinner_item);
 
-
         //Specify the layout to use when the list of choices appears
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         q1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         q2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         q3Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
         //Apply the adapter to the spinner
         ageSpinner.setAdapter(ageAdapter);
@@ -98,9 +99,13 @@ public class signUpScreen extends AppCompatActivity {
         q2Spinner.setAdapter(q2Adapter);
         q3Spinner.setAdapter(q3Adapter);
 
+
+        createAccount = (Button) findViewById(R.id.createAccountButton);
+
         createAccount.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+
                 //Variables used to check for correct responses
                 email = (EditText) findViewById(R.id.emailSignUp);
                 confirmEmail = (EditText) findViewById(R.id.emailReEnterSignUp);
@@ -177,19 +182,26 @@ public class signUpScreen extends AppCompatActivity {
                     errorText.setText("Invalid.");//changes the selected item text to this
                 }
 
-                //If all field are valid the button will start the new activity
+                //If all field are valid the button will check for proper log in creation
                 else {
+
+                    //Creates a new user with the email and pass provided
                     mAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(signUpScreen.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            //If the creation fails post a toast to the screen
                             if(!task.isSuccessful()){
                                 Toast.makeText(signUpScreen.this, "Sign Up Error", Toast.LENGTH_SHORT).show();
                                 task.getException().printStackTrace();
                             }
+
+                            //If successful get reference to the current user and save all user information
                             else{
                                 String user_id = mAuth.getCurrentUser().getUid();
                                 DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
 
+                                //User information to be saved to the database
                                 final String fName = firstName.getText().toString();
                                 final String lName = lastName.getText().toString();
                                 final String pNumber = phoneNumber.getText().toString();
@@ -197,8 +209,7 @@ public class signUpScreen extends AppCompatActivity {
                                 final String age = ageRange.getSelectedItem().toString();
                                 final String gender = genderSpin.getSelectedItem().toString();
 
-
-
+                                //Map used to store the information to the database, field name and data
                                 Map userData = new HashMap();
                                 userData.put("First Name", fName);
                                 userData.put("Last Name", lName);
@@ -210,6 +221,7 @@ public class signUpScreen extends AppCompatActivity {
                                 userData.put("Match Q2", currentQ2Answer);
                                 userData.put("Match Q3", currentQ3Answer);
 
+                                //Adds the map to the user based off their user ID
                                 current_user_db.setValue(userData);
                             }
                         }
@@ -237,12 +249,14 @@ public class signUpScreen extends AppCompatActivity {
         return false;
     }
 
+    //Starts the listener
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
     }
 
+    //Stops the listener
     @Override
     protected void onStop(){
         super.onStop();
