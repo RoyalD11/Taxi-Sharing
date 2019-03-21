@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,8 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.example.royald.mysecondapp.MESSAGE";
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener firebaseAuthListener;
+
+    Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,32 +48,36 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-    }
 
-    /* called when the user taps Send*/
-    public void login(View view){
-        EditText email = (EditText) findViewById(R.id.EmailBox);
-        EditText password = (EditText) findViewById(R.id.PasswordBox);
+        loginButton = (Button) findViewById(R.id.LoginButton);
 
-        final String userEmail = email.getText().toString();
-        final String userPassword = password.getText().toString();
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText email = (EditText) findViewById(R.id.EmailBox);
+                EditText password = (EditText) findViewById(R.id.PasswordBox);
 
-        //Checks if the required field is empty and if a valid email is entered.
-        if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
-        else if(TextUtils.isEmpty(password.getText())) password.setError("Password is Required!");
+                final String userEmail = email.getText().toString();
+                final String userPassword = password.getText().toString();
 
-        //Checks the database to see if the username and pass provided is valid, displays an error if it is not valid, sends a signal to onAuthStateChanged if valid
-        else {
-           mAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-               @Override
-               public void onComplete(@NonNull Task<AuthResult> task) {
-                   if(!task.isSuccessful()){
-                       Toast.makeText(MainActivity.this, "Sign In Error", Toast.LENGTH_SHORT).show();
-                   }
-               }
-           });
-        }
+                //Checks if the required field is empty and if a valid email is entered.
+                if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
+                else if(TextUtils.isEmpty(password.getText())) password.setError("Password is Required!");
 
+                    //Checks the database to see if the username and pass provided is valid, displays an error if it is not valid, sends a signal to onAuthStateChanged if valid
+                else {
+                    mAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(!task.isSuccessful()){
+                                Toast.makeText(MainActivity.this, "Sign In Error", Toast.LENGTH_SHORT).show();
+                                task.getException().printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     //Called when user hits sign up button

@@ -49,6 +49,50 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002658168004:android:00914af231888b90",
+        "android_client_info": {
+          "package_name": "mohgahel.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002658168004-ik1sgtah209f48q97bv5e4grsi4ev0uv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mohgahel.myapplication",
+            "certificate_hash": "c1dfdabe607457468b697b04edee6c1145f0a248"
+          }
+        },
+        {
+          "client_id": "1002658168004-t7g2ikn0ftphgamg0fpuh40idla4o7d9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSjPLibroSwBoumR6HAF0uIQdkdEditWA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002658168004-t7g2ikn0ftphgamg0fpuh40idla4o7d9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

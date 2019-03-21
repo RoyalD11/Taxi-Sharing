@@ -10,6 +10,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -24,10 +25,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class signUpScreen extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+
+    private Button createAccount;
+
+    private EditText email, confirmEmail, password, confirmPassword, firstName, lastName, phoneNumber, creditCard;
+
+    private Spinner ageRange, genderSpin, q1Spin, q2Spin, q3Spin;
+
+    private  String currentQ1Answer, currentQ2Answer, currentQ3Answer, compareValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +47,8 @@ public class signUpScreen extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_screen);
 
         mAuth = FirebaseAuth.getInstance();
+
+        createAccount = (Button) findViewById(R.id.createAccountButton);
 
         //If user provides valid log in information this will log them into the app and change the screen
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -84,100 +98,126 @@ public class signUpScreen extends AppCompatActivity {
         q2Spinner.setAdapter(q2Adapter);
         q3Spinner.setAdapter(q3Adapter);
 
-    }
+        createAccount.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //Variables used to check for correct responses
+                email = (EditText) findViewById(R.id.emailSignUp);
+                confirmEmail = (EditText) findViewById(R.id.emailReEnterSignUp);
+                password = (EditText) findViewById(R.id.passwordSignUp);
+                confirmPassword = (EditText) findViewById(R.id.passwordlReEnterSignUp);
 
-    /* called when the user taps Send*/
-    public void createAccount(View view){
+                firstName = (EditText) findViewById(R.id.firstNameText);
+                lastName = (EditText) findViewById(R.id.lastNameText);
 
-        //Variables used to check for correct responses
-        EditText email = (EditText) findViewById(R.id.emailSignUp);
-        EditText confirmEmail = (EditText) findViewById(R.id.emailReEnterSignUp);
-        EditText password = (EditText) findViewById(R.id.passwordSignUp);
-        EditText confirmPassword = (EditText) findViewById(R.id.passwordlReEnterSignUp);
+                phoneNumber = (EditText) findViewById(R.id.phoneNumberText);
 
-        EditText firstName = (EditText) findViewById(R.id.firstNameText);
-        EditText lastName = (EditText) findViewById(R.id.lastNameText);
+                creditCard = (EditText) findViewById(R.id.creditCardInput);
 
-        EditText phoneNumber = (EditText) findViewById(R.id.phoneNumberText);
+                ageRange = (Spinner) findViewById(R.id.ageRangeSpinner);
+                genderSpin = (Spinner) findViewById(R.id.genderSpinner);
 
-        EditText creditCard = (EditText) findViewById(R.id.creditCardInput);
+                q1Spin = (Spinner) findViewById(R.id.Q1Spinner);
+                q2Spin = (Spinner) findViewById(R.id.Q2Spinner);
+                q3Spin = (Spinner) findViewById(R.id.Q3Spinner);
 
-        Spinner q1Spinner = (Spinner) findViewById(R.id.Q1Spinner);
-        Spinner q2Spinner = (Spinner) findViewById(R.id.Q2Spinner);
-        Spinner q3Spinner = (Spinner) findViewById(R.id.Q3Spinner);
+                compareValue = "Answer";
+                currentQ1Answer = q1Spin.getSelectedItem().toString();
+                currentQ2Answer = q2Spin.getSelectedItem().toString();
+                currentQ3Answer = q3Spin.getSelectedItem().toString();
 
-        String compareValue = "Answer";
-        String currentQ1Answer = q1Spinner.getSelectedItem().toString();
-        String currentQ2Answer = q2Spinner.getSelectedItem().toString();
-        String currentQ3Answer = q3Spinner.getSelectedItem().toString();
+                final String userEmail = email.getText().toString();
+                final String userPassword = password.getText().toString();
 
-        final String userEmail = email.getText().toString();
-        final String userPassword = password.getText().toString();
+                //If-statement used to check if all fields are valid
+                if(TextUtils.isEmpty(email.getText()) || !isEmailValid(email.getText().toString()))
+                    email.setError("Valid Email is required!");
 
-        //If-statement used to check if all fields are valid
-        if(TextUtils.isEmpty(email.getText()) || !isEmailValid(email.getText().toString()))
-            email.setError("Valid Email is required!");
+                else if(TextUtils.isEmpty(confirmEmail.getText()) || !(email.getText().toString().equals(confirmEmail.getText().toString())))
+                    confirmEmail.setError("Emails must match!");
 
-        else if(TextUtils.isEmpty(confirmEmail.getText()) || !(email.getText().toString().equals(confirmEmail.getText().toString())))
-            confirmEmail.setError("Emails must match!");
+                else if(TextUtils.isEmpty(password.getText()))
+                    password.setError("Password is Required!");
 
-        else if(TextUtils.isEmpty(password.getText()))
-            password.setError("Password is Required!");
-
-        else if(TextUtils.isEmpty(confirmPassword.getText()) || !(password.getText().toString().equals(confirmPassword.getText().toString())))
-            confirmPassword.setError("Passwords must match!");
-
-
-        else if (TextUtils.isEmpty(firstName.getText()))
-            firstName.setError("First Name is Required!");
-
-        else if (TextUtils.isEmpty(lastName.getText()))
-            lastName.setError("Last Name is Required!");
+                else if(TextUtils.isEmpty(confirmPassword.getText()) || !(password.getText().toString().equals(confirmPassword.getText().toString())))
+                    confirmPassword.setError("Passwords must match!");
 
 
-        else if(TextUtils.isEmpty(phoneNumber.getText()) || isPhoneValid(phoneNumber.getText().toString()))
-            phoneNumber.setError("Valid Phone Number is Required");
+                else if (TextUtils.isEmpty(firstName.getText()))
+                    firstName.setError("First Name is Required!");
 
-        else if(TextUtils.isEmpty(creditCard.getText()) || !isCreditValid(creditCard.getText().toString()))
-            creditCard.setError("Valid Credit Card Number is Required");
+                else if (TextUtils.isEmpty(lastName.getText()))
+                    lastName.setError("Last Name is Required!");
 
 
-        //These three branches will make sure that a valid option is chosen from the matching question spinners.
-        else if(currentQ1Answer.equals(compareValue)){
-            TextView errorText = (TextView)q1Spinner.getSelectedView();
-            errorText.setError("");
-            errorText.setTextColor(Color.RED);//just to highlight that this is an error
-            errorText.setText("Invalid.");//changes the selected item text to this
-        }
-        else if(currentQ2Answer.equals(compareValue)){
-            TextView errorText = (TextView)q2Spinner.getSelectedView();
-            errorText.setError("");
-            errorText.setTextColor(Color.RED);//just to highlight that this is an error
-            errorText.setText("Invalid.");//changes the selected item text to this
-        }
-        else if(currentQ3Answer.equals(compareValue)){
-            TextView errorText = (TextView)q3Spinner.getSelectedView();
-            errorText.setError("");
-            errorText.setTextColor(Color.RED);//just to highlight that this is an error
-            errorText.setText("Invalid.");//changes the selected item text to this
-        }
+                else if(TextUtils.isEmpty(phoneNumber.getText()) || isPhoneValid(phoneNumber.getText().toString()))
+                    phoneNumber.setError("Valid Phone Number is Required");
 
-        //If all field are valid the button will start the new activity
-        else {
-            mAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(signUpScreen.this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(!task.isSuccessful()){
-                        Toast.makeText(signUpScreen.this, "Sign Up Error", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
-                        current_user_db.setValue(true);
-                    }
+                else if(TextUtils.isEmpty(creditCard.getText()) || !isCreditValid(creditCard.getText().toString()))
+                    creditCard.setError("Valid Credit Card Number is Required");
+
+
+                    //These three branches will make sure that a valid option is chosen from the matching question spinners.
+                else if(currentQ1Answer.equals(compareValue)){
+                    TextView errorText = (TextView)q1Spin.getSelectedView();
+                    errorText.setError("");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    errorText.setText("Invalid.");//changes the selected item text to this
                 }
-            });
-        }
+                else if(currentQ2Answer.equals(compareValue)){
+                    TextView errorText = (TextView)q2Spin.getSelectedView();
+                    errorText.setError("");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    errorText.setText("Invalid.");//changes the selected item text to this
+                }
+                else if(currentQ3Answer.equals(compareValue)){
+                    TextView errorText = (TextView)q3Spin.getSelectedView();
+                    errorText.setError("");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    errorText.setText("Invalid.");//changes the selected item text to this
+                }
+
+                //If all field are valid the button will start the new activity
+                else {
+                    mAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(signUpScreen.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(!task.isSuccessful()){
+                                Toast.makeText(signUpScreen.this, "Sign Up Error", Toast.LENGTH_SHORT).show();
+                                task.getException().printStackTrace();
+                            }
+                            else{
+                                String user_id = mAuth.getCurrentUser().getUid();
+                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
+
+                                final String fName = firstName.getText().toString();
+                                final String lName = lastName.getText().toString();
+                                final String pNumber = phoneNumber.getText().toString();
+                                final String cCard = creditCard.getText().toString();
+                                final String age = ageRange.getSelectedItem().toString();
+                                final String gender = genderSpin.getSelectedItem().toString();
+
+
+
+                                Map userData = new HashMap();
+                                userData.put("First Name", fName);
+                                userData.put("Last Name", lName);
+                                userData.put("Age", age);
+                                userData.put("Gender", gender);
+                                userData.put("Phone Number", pNumber);
+                                userData.put("Credit Card", cCard);
+                                userData.put("Match Q1", currentQ1Answer);
+                                userData.put("Match Q2", currentQ2Answer);
+                                userData.put("Match Q3", currentQ3Answer);
+
+                                current_user_db.setValue(userData);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     //Returns true is the email is valid

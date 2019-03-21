@@ -355,7 +355,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="0dp"
                     android:background="@color/colorPrimary"
-                    android:onClick="createAccount"
                     android:text="Create Account"
                     android:textColor="@color/common_google_signin_btn_text_dark_default" />
             </RelativeLayout>
