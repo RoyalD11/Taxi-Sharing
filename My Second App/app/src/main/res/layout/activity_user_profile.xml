@@ -134,8 +134,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="29dp"
-                android:layout_marginTop="244dp"
+                android:layout_marginStart="9dp"
+                android:layout_marginTop="243dp"
                 android:text="Email:"
                 android:textSize="18sp" />
 
@@ -164,13 +164,11 @@
 
             <TextView
                 android:id="@+id/ageText"
-                android:layout_width="96dp"
+                android:layout_width="123dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="283dp"
-                android:layout_marginEnd="191dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="284dp"
                 android:layout_toEndOf="@+id/ageTitle"
                 android:text="Age.........."
                 android:textSize="18sp" />
@@ -181,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/ageTitle"
                 android:layout_marginTop="1dp"
-                android:layout_marginEnd="11dp"
+                android:layout_marginEnd="8dp"
                 android:layout_toStartOf="@+id/genderText"
                 android:text="Gender:"
                 android:textSize="18sp" />
@@ -204,7 +202,7 @@
                 android:layout_below="@+id/genderTitle"
                 android:layout_alignEnd="@+id/ageText"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="1dp"
+                android:layout_marginEnd="26dp"
                 android:text="Phone Number:"
                 android:textSize="18sp" />
 
@@ -214,6 +212,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/genderTitle"
                 android:layout_alignTop="@+id/phoneTitle"
+                android:layout_marginStart="-24dp"
+                android:layout_marginTop="0dp"
                 android:text="Phone......................"
                 android:textSize="18sp" />
 

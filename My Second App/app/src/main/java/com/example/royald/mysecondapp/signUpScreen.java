@@ -199,7 +199,7 @@ public class signUpScreen extends AppCompatActivity {
                             //If successful get reference to the current user and save all user information
                             else{
                                 String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
+                                DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
 
                                 //User information to be saved to the database
                                 final String fName = firstName.getText().toString();
@@ -213,6 +213,7 @@ public class signUpScreen extends AppCompatActivity {
                                 Map userData = new HashMap();
                                 userData.put("First Name", fName);
                                 userData.put("Last Name", lName);
+                                userData.put("Email", userEmail);
                                 userData.put("Age", age);
                                 userData.put("Gender", gender);
                                 userData.put("Phone Number", pNumber);
@@ -220,9 +221,10 @@ public class signUpScreen extends AppCompatActivity {
                                 userData.put("Match Q1", currentQ1Answer);
                                 userData.put("Match Q2", currentQ2Answer);
                                 userData.put("Match Q3", currentQ3Answer);
+                                userData.put("Rating", 0.0f);
 
                                 //Adds the map to the user based off their user ID
-                                current_user_db.setValue(userData);
+                                myDatabase.setValue(userData);
                             }
                         }
                     });
