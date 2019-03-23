@@ -182,7 +182,7 @@
                 android:visibility="invisible" />
 
             <TextView
-                android:id="@+id/creditCardText"
+                android:id="@+id/creditCardTitle"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
                 android:text="  Payment Information"
@@ -190,7 +190,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/creditCardInput"
+                android:id="@+id/creditCardText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
