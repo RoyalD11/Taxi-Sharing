@@ -62,8 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 final String userPassword = password.getText().toString();
 
                 //Checks if the required field is empty and if a valid email is entered.
-                if(TextUtils.isEmpty(email.getText())) email.setError("Email is required!");
-                else if(TextUtils.isEmpty(password.getText())) password.setError("Password is Required!");
+                if(TextUtils.isEmpty(email.getText())|| !isEmailValid(email.getText().toString()))
+                    email.setError("Valid email is required!");
+
+                else if(TextUtils.isEmpty(password.getText()))
+                    password.setError("Password is Required!");
 
                 //Checks the database to see if the username and pass provided is valid, displays an error if it is not valid, sends a signal to onAuthStateChanged if valid
                 else {
@@ -83,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    //Returns true is the email is valid
+    boolean isEmailValid(CharSequence emailString){
+        return Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
     }
 
     //Called when user hits sign up button

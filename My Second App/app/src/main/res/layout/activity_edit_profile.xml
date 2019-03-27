@@ -143,7 +143,7 @@
                 android:layout_height="43dp"
                 android:text="  Profile Picture (optional)"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -157,20 +157,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="110dp"
                     android:layout_marginTop="0dp"
-                    app:srcCompat="@drawable/userimage" />
-
-                <ImageButton
-                    android:id="@+id/addPictureButton"
-                    style="@android:style/Widget.DeviceDefault.ImageButton"
-                    android:layout_width="164dp"
-                    android:layout_height="54dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="62dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@android:color/transparent"
-                    android:cropToPadding="false"
-                    app:srcCompat="@android:drawable/ic_menu_add" />
+                    app:srcCompat="@drawable/userimage"
+                    android:scaleType="fitXY"/>
 
             </RelativeLayout>
 
@@ -308,14 +296,13 @@
                 android:layout_height="match_parent">
 
                 <Button
-                    android:id="@+id/createAccountButton"
+                    android:id="@+id/returnProfileButton"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="0dp"
                     android:background="@color/colorPrimary"
-                    android:onClick="toUserProfile"
                     android:text="Return To Profile"
                     android:textColor="@color/common_google_signin_btn_text_dark_default" />
             </RelativeLayout>

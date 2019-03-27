@@ -1,8 +1,13 @@
 package com.example.royald.mysecondapp;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,19 +17,28 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +55,10 @@ public class signUpScreen extends AppCompatActivity {
     private Spinner ageRange, genderSpin, q1Spin, q2Spin, q3Spin;
 
     private  String currentQ1Answer, currentQ2Answer, currentQ3Answer, compareValue;
+
+    private ImageView profileImage;
+
+    private Uri resultUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +86,8 @@ public class signUpScreen extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN); //Setting so that the screen focuses the input field you are currently on
 
         //Set the user image on the screen
-        ImageView image = (ImageView) findViewById(R.id.profilePictureSignUp);
-        image.setImageResource(R.drawable.userimage);
+        profileImage = (ImageView) findViewById(R.id.profilePictureSignUp);
+        profileImage.setImageResource(R.drawable.userimage);
 
         //Declare the Spinners
         Spinner ageSpinner = (Spinner) findViewById(R.id.ageRangeSpinner);
@@ -98,6 +116,15 @@ public class signUpScreen extends AppCompatActivity {
         q1Spinner.setAdapter(q1Adapter);
         q2Spinner.setAdapter(q2Adapter);
         q3Spinner.setAdapter(q3Adapter);
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1); //1 means open Gallery, 2 would be open Camera
+            }
+        });
 
 
         createAccount = (Button) findViewById(R.id.createAccountButton);
@@ -143,6 +170,9 @@ public class signUpScreen extends AppCompatActivity {
 
                 else if(TextUtils.isEmpty(password.getText()))
                     password.setError("Password is Required!");
+
+                else if(password.getText().length() < 6)
+                    password.setError("Password must 6 or more characters.");
 
                 else if(TextUtils.isEmpty(confirmPassword.getText()) || !(password.getText().toString().equals(confirmPassword.getText().toString())))
                     confirmPassword.setError("Passwords must match!");
@@ -198,7 +228,7 @@ public class signUpScreen extends AppCompatActivity {
 
                             //If successful get reference to the current user and save all user information
                             else{
-                                String user_id = mAuth.getCurrentUser().getUid();
+                                final String user_id = mAuth.getCurrentUser().getUid();
                                 DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
 
                                 //User information to be saved to the database
@@ -225,6 +255,48 @@ public class signUpScreen extends AppCompatActivity {
 
                                 //Adds the map to the user based off their user ID
                                 myDatabase.setValue(userData);
+
+                                if(resultUri != null){
+                                    final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
+                                    Bitmap bitmap = null;
+
+                                    try {
+                                        bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
+                                    }
+                                    catch (IOException e){
+                                        e.printStackTrace();
+                                    }
+
+                                    ByteArrayOutputStream boas = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 20, boas);
+                                    byte[] data = boas.toByteArray();
+                                    UploadTask uploadTask = filePath.putBytes(data);
+
+                                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                        @Override
+                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                            if(!task.isSuccessful()){
+                                                throw task.getException();
+                                            }
+                                            return filePath.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful()){
+                                                Uri downloadUrl = task.getResult();
+
+                                                DatabaseReference myDatabaseImage = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
+
+                                                Map imageMap = new HashMap();
+
+                                                imageMap.put("profileImageUrl", downloadUrl.toString());
+
+                                                myDatabaseImage.updateChildren(imageMap);
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         }
                     });
@@ -249,6 +321,16 @@ public class signUpScreen extends AppCompatActivity {
     boolean isCreditValid(String creditString){
         if(creditString.length() == 16) return true;
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            profileImage.setImageURI(resultUri);
+        }
     }
 
     //Starts the listener

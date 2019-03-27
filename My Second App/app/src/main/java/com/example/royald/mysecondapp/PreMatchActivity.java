@@ -1,6 +1,7 @@
 package com.example.royald.mysecondapp;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -10,9 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,10 +24,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 public class PreMatchActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference myRef;
+    private String userId;
+    private String imageUrl;
+
+    private ImageView profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +73,35 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         ArrayAdapter<CharSequence> promptQ4Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ4, android.R.layout.simple_spinner_item);
         promptQ4Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         promptQ4Spin.setAdapter(promptQ4Adapter);
+
+        mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
+        myRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(userId);
+
+        profileButton = (ImageView) findViewById(R.id.userProfileButton);
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //If data exists and there is more than one child in the section of the database i'm referencing
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                    //Create a map that stores all the data
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    if(map.get("profileImageUrl") != null){
+                        imageUrl = map.get("profileImageUrl").toString();
+                        Glide.with(getApplication()).load(imageUrl).into(profileButton);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

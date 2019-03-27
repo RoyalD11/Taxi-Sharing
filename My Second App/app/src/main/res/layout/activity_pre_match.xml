@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     tools:context=".PreMatchActivity">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/userProfileButton"
         android:layout_width="83dp"
         android:layout_height="71dp"
@@ -18,7 +18,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/usersmall"
         android:onClick="toUserProfile"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/profileText"

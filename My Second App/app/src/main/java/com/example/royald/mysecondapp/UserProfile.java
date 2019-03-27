@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +38,9 @@ public class UserProfile extends AppCompatActivity {
     private String mQ1;
     private String mQ2;
     private String mQ3;
+    private String imageUrl;
+
+    private ImageView profileImage;
 
     private float rating;
 
@@ -53,6 +58,8 @@ public class UserProfile extends AppCompatActivity {
         mQ2View = (TextView) findViewById(R.id.q2AnswerText);
         mQ3View = (TextView) findViewById(R.id.q3AnswerText);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        profileImage = (ImageView) findViewById(R.id.profileImageView);
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
@@ -124,6 +131,11 @@ public class UserProfile extends AppCompatActivity {
                     if(map.get("Rating") != null){
                         rating = Float.parseFloat(map.get("Rating").toString());
                         ratingBar.setRating(rating);
+                    }
+
+                    if(map.get("profileImageUrl") != null){
+                        imageUrl = map.get("profileImageUrl").toString();
+                        Glide.with(getApplication()).load(imageUrl).into(profileImage);
                     }
                 }
             }
