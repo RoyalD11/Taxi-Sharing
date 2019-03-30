@@ -87,7 +87,7 @@ public class signUpScreen extends AppCompatActivity {
 
         //Set the user image on the screen
         profileImage = (ImageView) findViewById(R.id.profilePictureSignUp);
-        profileImage.setImageResource(R.drawable.userimage);
+        profileImage.setImageResource(R.drawable.newuserimage);
 
         //Declare the Spinners
         Spinner ageSpinner = (Spinner) findViewById(R.id.ageRangeSpinner);

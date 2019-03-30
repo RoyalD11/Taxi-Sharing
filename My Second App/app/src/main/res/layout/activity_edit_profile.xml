@@ -157,8 +157,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="110dp"
                     android:layout_marginTop="0dp"
-                    app:srcCompat="@drawable/userimage"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/newuserimage" />
 
             </RelativeLayout>
 

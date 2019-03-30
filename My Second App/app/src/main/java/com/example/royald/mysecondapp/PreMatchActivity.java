@@ -137,7 +137,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
         if(TextUtils.isEmpty(destination.getText())) destination.setError("Destination is required!");
         else {
-            ((ImageButton) findViewById(R.id.userProfileButton)).setVisibility(View.GONE);
+            ((ImageView) findViewById(R.id.userProfileButton)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.profileText)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.destinationText)).setVisibility(View.GONE);
             ((EditText) findViewById(R.id.enterDestination)).setVisibility(View.GONE);
@@ -150,7 +150,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void removePrompt(View view){
         (findViewById(R.id.findMatchPromptView)).setVisibility(View.GONE);
 
-        ((ImageButton) findViewById(R.id.userProfileButton)).setVisibility(View.VISIBLE);
+        ((ImageView) findViewById(R.id.userProfileButton)).setVisibility(View.VISIBLE);
         ((TextView) findViewById(R.id.profileText)).setVisibility(View.VISIBLE);
         ((TextView) findViewById(R.id.destinationText)).setVisibility(View.VISIBLE);
         ((EditText) findViewById(R.id.enterDestination)).setVisibility(View.VISIBLE);
