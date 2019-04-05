@@ -65,6 +65,8 @@ public class UserProfile extends AppCompatActivity {
         userId = mAuth.getCurrentUser().getUid();
         myRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(userId);
 
+        ratingBar.setFocusable(false);
+
         getUserInfo();
     }
 

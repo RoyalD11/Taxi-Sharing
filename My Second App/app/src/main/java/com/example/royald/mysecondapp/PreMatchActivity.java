@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class PreMatchActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -44,8 +45,13 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
     private ImageView profileButton;
 
+    private Button findMatchPrompt;
+
+    private Spinner promptQ1Spin, promptQ2Spin, promptQ3Spin, promptQ4Spin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pre_match);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -54,22 +60,22 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
 
-        Spinner promptQ1Spin = (Spinner) findViewById(R.id.promptQ1Spinner);
+        promptQ1Spin = (Spinner) findViewById(R.id.promptQ1Spinner);
         ArrayAdapter<CharSequence> promptQ1Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ1, android.R.layout.simple_spinner_item);
         promptQ1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         promptQ1Spin.setAdapter(promptQ1Adapter);
 
-        Spinner promptQ2Spin = (Spinner) findViewById(R.id.promptQ2Spinner);
+        promptQ2Spin = (Spinner) findViewById(R.id.promptQ2Spinner);
         ArrayAdapter<CharSequence> promptQ2Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ2, android.R.layout.simple_spinner_item);
         promptQ2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         promptQ2Spin.setAdapter(promptQ2Adapter);
 
-        Spinner promptQ3Spin = (Spinner) findViewById(R.id.promptQ3Spinner);
+        promptQ3Spin = (Spinner) findViewById(R.id.promptQ3Spinner);
         ArrayAdapter<CharSequence> promptQ3Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ3, android.R.layout.simple_spinner_item);
         promptQ3Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         promptQ3Spin.setAdapter(promptQ3Adapter);
 
-        Spinner promptQ4Spin = (Spinner) findViewById(R.id.promptQ4Spinner);
+        promptQ4Spin = (Spinner) findViewById(R.id.promptQ4Spinner);
         ArrayAdapter<CharSequence> promptQ4Adapter = ArrayAdapter.createFromResource(this, R.array.promptQ4, android.R.layout.simple_spinner_item);
         promptQ4Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         promptQ4Spin.setAdapter(promptQ4Adapter);
@@ -79,6 +85,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         myRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(userId);
 
         profileButton = (ImageView) findViewById(R.id.userProfileButton);
+
+        findMatchPrompt = (Button) findViewById(R.id.findMatchPromptButton);
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -99,6 +107,26 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        findMatchPrompt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user_id = mAuth.getCurrentUser().getUid();
+                DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
+
+                final String promptQ1 = promptQ1Spin.getSelectedItem().toString();
+                final String promptQ2 = promptQ2Spin.getSelectedItem().toString();
+                final String promptQ3 = promptQ3Spin.getSelectedItem().toString();
+                final String promptQ4 = promptQ4Spin.getSelectedItem().toString();
+
+                myRef.child("Match Q4").setValue(promptQ1);
+                myRef.child("Match Q5").setValue(promptQ2);
+                myRef.child("Match Q6").setValue(promptQ3);
+                myRef.child("Match Q7").setValue(promptQ4);
+
 
             }
         });
@@ -137,6 +165,10 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
         if(TextUtils.isEmpty(destination.getText())) destination.setError("Destination is required!");
         else {
+            String destinationText = ((EditText) findViewById(R.id.enterDestination)).getText().toString();
+
+            myRef.child("Destination").setValue(destinationText);
+
             ((ImageView) findViewById(R.id.userProfileButton)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.profileText)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.destinationText)).setVisibility(View.GONE);

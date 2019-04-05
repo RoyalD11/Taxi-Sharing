@@ -113,7 +113,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="196dp"
                 android:layout_marginEnd="42dp"
-                android:isIndicator="false"
+                android:isIndicator="true"
                 android:numStars="5"
                 android:rating="2.5"
                 android:visibility="visible" />

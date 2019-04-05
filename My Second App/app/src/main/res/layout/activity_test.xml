@@ -6,14 +6,309 @@
     android:layout_height="match_parent"
     tools:context=".testActivity">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="208dp"
+    <android.support.v7.widget.CardView
+        android:id="@+id/passengerInfoView"
+        android:layout_width="180dp"
+        android:layout_height="158dp"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <TextView
+                    android:id="@+id/passengerTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:text="Passenger Information"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/passPic1"
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="33dp"
+                    app:srcCompat="@drawable/usersmall" />
+
+                <ImageView
+                    android:id="@+id/passPic2"
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/passPic1"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="9dp"
+                    app:srcCompat="@drawable/usersmall" />
+
+                <ImageView
+                    android:id="@+id/passPic3"
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/passPic2"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="10dp"
+                    app:srcCompat="@drawable/usersmall" />
+
+                <TextView
+                    android:id="@+id/namePass1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/passPic1"
+                    android:layout_toEndOf="@+id/passPic1"
+                    android:text="Name.................." />
+
+                <RatingBar
+                    android:id="@+id/ratingPass1"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/passPic1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/passPic1"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:isIndicator="true"/>
+
+                <TextView
+                    android:id="@+id/namePass2"
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/passPic2"
+                    android:layout_marginStart="0dp"
+                    android:layout_toEndOf="@+id/passPic2"
+                    android:text="Name.................." />
+
+                <RatingBar
+                    android:id="@+id/ratingPass2"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/namePass2"
+                    android:layout_alignBottom="@+id/passPic2"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/passPic1"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:isIndicator="true"/>
+
+                <TextView
+                    android:id="@+id/namePass3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/passPic3"
+                    android:layout_marginTop="0dp"
+                    android:layout_toEndOf="@+id/passPic3"
+                    android:text="Name.................." />
+
+                <RatingBar
+                    android:id="@+id/ratingPass3"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/ratingPass1"
+                    android:layout_alignParentBottom="true"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:isIndicator="true"/>
+            </RelativeLayout>
+        </ScrollView>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/driverInfoView"
+        android:layout_width="180dp"
+        android:layout_height="158dp"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/driverTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:text="Driver Information"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="75dp"
+                android:layout_height="51dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="29dp"
+                android:layout_marginEnd="53dp"
+                app:srcCompat="@drawable/usersmall" />
+
+            <TextView
+                android:id="@+id/driverName"
+                android:layout_width="match_parent"
+                android:layout_height="19dp"
+                android:layout_below="@+id/imageView"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="58dp"
+                android:text="Name......................."
+                android:textAlignment="center" />
+
+            <RatingBar
+                android:id="@+id/driverRating"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/driverName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-58dp"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="2.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.192"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="408dp" />
+
+            <TextView
+                android:id="@+id/carMake"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="22dp"
+                android:text="Hyundai Accent"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/carPlate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/carMake"
+                android:layout_marginTop="20dp"
+                android:text="ABCD 123"
+                android:textAlignment="center" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/acceptButton"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="Accept"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/declineButton"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="Decline"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="260dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/pickUpTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="2dp"
+                android:text="Pick up Location:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/pickUpDestination"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/pickUpTitle"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/pickUpTitle"
+                android:text="Destination......." />
+
+            <TextView
+                android:id="@+id/costTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="34dp"
+                android:text="Cost:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/costTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="5dp"
+                android:text="Amount" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>
