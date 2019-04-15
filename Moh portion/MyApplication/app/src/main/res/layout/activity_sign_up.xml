@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
@@ -52,30 +52,15 @@
                 android:visibility="invisible" />
 
             <EditText
-                android:id="@+id/lastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Last Name"
-                android:inputType="textPersonName" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:background="?android:attr/listDivider"
-                android:visibility="invisible" />
-
-            <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Enter Email"
+                android:hint="Email"
                 android:inputType="textEmailAddress" />
 
             <View
-                android:id="@+id/divider4"
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
                 android:background="?android:attr/listDivider"
@@ -90,6 +75,21 @@
                 android:inputType="textEmailAddress" />
 
             <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword" />
+
+            <View
                 android:id="@+id/divider5"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
@@ -97,22 +97,7 @@
                 android:visibility="invisible" />
 
             <EditText
-                android:id="@+id/pass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Enter Password"
-                android:inputType="textPassword" />
-
-            <View
-                android:id="@+id/divider6"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:background="?android:attr/listDivider"
-                android:visibility="invisible" />
-
-            <EditText
-                android:id="@+id/confirmPass"
+                android:id="@+id/confirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -120,7 +105,7 @@
                 android:inputType="textPassword" />
 
             <View
-                android:id="@+id/divider2"
+                android:id="@+id/divider6"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
                 android:background="?android:attr/listDivider"
@@ -135,6 +120,21 @@
                 android:inputType="phone" />
 
             <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/car"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Car Make/Model"
+                android:inputType="text" />
+
+            <View
                 android:id="@+id/divider7"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
@@ -142,12 +142,12 @@
                 android:visibility="invisible" />
 
             <EditText
-                android:id="@+id/city"
+                android:id="@+id/plate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="City"
-                android:inputType="textPostalAddress" />
+                android:hint="License Plate"
+                android:inputType="textCapCharacters" />
 
             <View
                 android:id="@+id/divider9"
@@ -157,11 +157,11 @@
                 android:visibility="invisible" />
 
             <Button
-                android:id="@+id/continueSignUp"
+                android:id="@+id/confirmSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/holo_blue_dark"
-                android:text="Continue"
+                android:text="Confirm"
                 android:textColor="@android:color/white" />
 
         </LinearLayout>

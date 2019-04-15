@@ -16,12 +16,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.DatabaseRegistrar;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignUpActivity extends AppCompatActivity {
-    private Button continueSign;
+    private Button confirmButton;
+    private EditText email, password, firstName, phone, car, plate;
+    private String driverEmail, driverPassword, driverID, driverName, driverPhone, driverCar, driverPlate;
     private FirebaseAuth auth;
+    private DatabaseReference driverDatabase;
     private FirebaseAuth.AuthStateListener fireBaseAuthListener;
 
     @Override
@@ -43,25 +48,26 @@ public class SignUpActivity extends AppCompatActivity {
             }
         };
 
-        continueSign = (Button) findViewById(R.id.continueSignUp);
+        confirmButton = (Button) findViewById(R.id.confirmSignUp);
 
-        continueSign.setOnClickListener(new View.OnClickListener(){
+        confirmButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                EditText email = (EditText) findViewById(R.id.email);
-                EditText password = (EditText) findViewById(R.id.pass);
-                final String driverEmail = email.getText().toString();
-                final String driverPassword = password.getText().toString();
+                email = (EditText) findViewById(R.id.email);
+                password = (EditText) findViewById(R.id.password);
+                driverEmail = email.getText().toString();
+                driverPassword = password.getText().toString();
 
 
-                EditText firstName = findViewById(R.id.firstName);
-                EditText lastName = findViewById(R.id.lastName);
-                //EditText email = findViewById(R.id.email);
+                firstName = findViewById(R.id.firstName);
                 EditText confirmEmail = findViewById(R.id.confirmEmail);
-                //EditText pass = findViewById(R.id.pass);
-                EditText confirmPass = findViewById(R.id.confirmPass);
-                EditText phone = findViewById(R.id.phone);
-                EditText city = findViewById(R.id.city);
+                EditText confirmPass = findViewById(R.id.confirmPassword);
+                phone = findViewById(R.id.phone);
+                car = findViewById(R.id.car);
+                plate = findViewById(R.id.plate);
+
+                //driverID = auth.getCurrentUser().getUid();
+                //driverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("driverID");
 
                 if(TextUtils.isEmpty(email.getText())) email.setError("Email is required.");
                 else if (TextUtils.isEmpty(password.getText())) password.setError("Password is required.");
@@ -73,15 +79,30 @@ public class SignUpActivity extends AppCompatActivity {
                                 Toast.makeText(SignUpActivity.this, "SignUp unsuccessful.", Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                String driverId = auth.getCurrentUser().getUid();
-                                DatabaseReference currentDriverDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId);
-                                currentDriverDb.setValue(true);
+                                driverID = auth.getCurrentUser().getUid();
+                                DatabaseReference DriverDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
+
+                                Map drivers = new HashMap();
+
+                                driverName = firstName.getText().toString();
+                                driverPhone = phone.getText().toString();
+                                driverCar = car.getText().toString();
+                                driverPlate = plate.getText().toString();
+
+                                drivers.put("Name", driverName);
+                                drivers.put("Email", driverEmail);
+                                drivers.put("Phone Number", driverPhone);
+                                drivers.put("Car Make", driverCar);
+                                drivers.put("License Plate", driverPlate);
+                                DriverDb.setValue(drivers);
+
                             }
                         }
                     });
                 }
             }
         });
+
 
 
     }

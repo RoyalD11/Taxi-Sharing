@@ -16,8 +16,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
@@ -49,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText email = (EditText) findViewById(R.id.email);
+                EditText email = (EditText) findViewById(R.id.confirmEmail);
                 EditText password = (EditText) findViewById(R.id.password);
                 final String driverEmail = email.getText().toString();
                 final String driverPassword = password.getText().toString();
