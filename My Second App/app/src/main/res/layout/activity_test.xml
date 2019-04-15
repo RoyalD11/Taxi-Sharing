@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".testActivity">
 
+    <TextView
+        android:id="@+id/matchFoundTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Match Found"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
     <android.support.v7.widget.CardView
         android:id="@+id/passengerInfoView"
         android:layout_width="180dp"
@@ -13,7 +26,7 @@
         android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -146,7 +159,7 @@
         android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -165,7 +178,7 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/driverPic"
                 android:layout_width="75dp"
                 android:layout_height="51dp"
                 android:layout_alignParentStart="true"
@@ -180,7 +193,7 @@
                 android:id="@+id/driverName"
                 android:layout_width="match_parent"
                 android:layout_height="19dp"
-                android:layout_below="@+id/imageView"
+                android:layout_below="@+id/driverPic"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
@@ -237,7 +250,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/declineButton"
@@ -250,16 +263,18 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        android:visibility="gone"/>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/preMatchInformationView"
         android:layout_width="0dp"
         android:layout_height="44dp"
         android:layout_marginTop="260dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -307,6 +322,108 @@
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="5dp"
                 android:text="Amount" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/acceptPromptView"
+        android:layout_width="344dp"
+        android:layout_height="161dp"
+        android:layout_marginTop="144dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/acceptTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:text="Accept Ride?"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/acceptConfirmButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/acceptRejectButton"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:background="@color/colorPrimary"
+                android:text="Yes"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/acceptRejectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="22dp"
+                android:background="@color/colorPrimary"
+                android:text="No"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/declinePromptView"
+        android:layout_width="344dp"
+        android:layout_height="161dp"
+        android:layout_marginTop="144dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/declineTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:text="Decline Ride?"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/declineConfirmButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/declineRejectButton"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="30dp"
+                android:background="@color/colorPrimary"
+                android:text="Yes"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/declineRejectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="22dp"
+                android:background="@color/colorPrimary"
+                android:text="No"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

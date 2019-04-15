@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".test2">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/passengerInfoViewExtended"
+        android:layout_width="180dp"
+        android:layout_height="205dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/passengerTextViewExtended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:text="Passenger Information"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/passPic1Extended"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="33dp"
+                app:srcCompat="@drawable/usersmall" />
+
+            <ImageView
+                android:id="@+id/passPic2Extended"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_below="@+id/passPic1Extended"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="28dp"
+                app:srcCompat="@drawable/usersmall" />
+
+            <ImageView
+                android:id="@+id/passPic3Extended"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_below="@+id/passPic2Extended"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="28dp"
+                app:srcCompat="@drawable/usersmall" />
+
+            <TextView
+                android:id="@+id/namePass1Extended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/passPic1Extended"
+                android:layout_toEndOf="@+id/passPic1Extended"
+                android:text="Name.................." />
+
+            <RatingBar
+                android:id="@+id/ratingPass1Extended"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/passPic1Extended"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/passPic1Extended"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="2.5" />
+
+            <TextView
+                android:id="@+id/namePass2Extended"
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/passPic2Extended"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/passPic2Extended"
+                android:text="Name.................." />
+
+            <RatingBar
+                android:id="@+id/ratingPass2Extended"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/namePass2Extended"
+                android:layout_alignBottom="@+id/passPic2Extended"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/passPic1Extended"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="2.5" />
+
+            <TextView
+                android:id="@+id/namePass3Extended"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/passPic3Extended"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/passPic3Extended"
+                android:text="Name.................." />
+
+            <RatingBar
+                android:id="@+id/ratingPass3Extended"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/passPic3Extended"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/passPic3Extended"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="2.5" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/driverInfoViewExtended"
+        android:layout_width="180dp"
+        android:layout_height="205dp"
+        android:layout_alignTop="@+id/passengerInfoViewExtended"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/driverTextViewExtended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:text="Driver Information"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/driverPicExtended"
+                android:layout_width="75dp"
+                android:layout_height="51dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="29dp"
+                android:layout_marginEnd="53dp"
+                app:srcCompat="@drawable/usersmall" />
+
+            <TextView
+                android:id="@+id/driverNameExtended"
+                android:layout_width="match_parent"
+                android:layout_height="17dp"
+                android:layout_below="@+id/driverPicExtended"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="107dp"
+                android:text="Name......................."
+                android:textAlignment="center" />
+
+            <RatingBar
+                android:id="@+id/driverRatingExtended"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/driverNameExtended"
+                android:layout_alignStart="@+id/driverPicExtended"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="-98dp"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="2.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.192"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="408dp" />
+
+            <TextView
+                android:id="@+id/carMakeExtended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="46dp"
+                android:text="Hyundai Accent"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/carPlateExtended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/carMakeExtended"
+                android:layout_marginTop="20dp"
+                android:text="ABCD 123"
+                android:textAlignment="center" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/rideOverPrompt"
+        android:layout_width="253dp"
+        android:layout_height="319dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/rideOverTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="Ride Over"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/costTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="59dp"
+                android:layout_marginTop="67dp"
+                android:text="Cost:"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/costAmount"
+                android:layout_width="91dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/costTitle"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="-1dp"
+                android:layout_toEndOf="@+id/costTitle"
+                android:text="cost...."
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/rateDriverButton"
+                android:layout_width="109dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="113dp"
+                android:background="@color/colorPrimary"
+                android:text="Rate Driver"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/ratePassengerButton"
+                android:layout_width="136dp"
+                android:layout_height="29dp"
+                android:layout_below="@+id/rateDriverButton"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="62dp"
+                android:layout_marginTop="26dp"
+                android:background="@color/colorPrimary"
+                android:text="Rate Passenger"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/finishRideButton"
+                android:layout_width="168dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="46dp"
+                android:layout_marginEnd="39dp"
+                android:layout_marginBottom="29dp"
+                android:background="@color/colorPrimary"
+                android:text="Finish Ride"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/rateDriverPrompt"
+                android:layout_width="209dp"
+                android:layout_height="206dp"
+                android:layout_alignTop="@+id/costTitle"
+                android:layout_alignEnd="@+id/rateDriverButton"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="-51dp"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/rateDriverImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="54dp"
+                        android:layout_marginTop="19dp"
+                        app:srcCompat="@drawable/usersmall" />
+
+                    <TextView
+                        android:id="@+id/rateDriverName"
+                        android:layout_width="122dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="Name........"
+                        android:textAlignment="center" />
+
+                    <RatingBar
+                        android:id="@+id/rateDriverSubmission"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="68dp"
+                        android:numStars="5"
+                        android:rating="2.5" />
+
+                    <Button
+                        android:id="@+id/rateDriverSubmitButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="37dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/colorPrimary"
+                        android:text="Submit"
+                        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/ratePassengerPrompt"
+                android:layout_width="214dp"
+                android:layout_height="230dp"
+                android:layout_alignTop="@+id/costTitle"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="22dp"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/ratePassengerImage3"
+                        android:layout_width="62dp"
+                        android:layout_height="49dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginTop="132dp"
+                        app:srcCompat="@drawable/usersmall" />
+
+                    <TextView
+                        android:id="@+id/ratePassengerName3"
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/ratePassengerImage2"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="125dp"
+                        android:layout_toEndOf="@+id/ratePassengerImage2"
+                        android:text="Name........." />
+
+                    <RatingBar
+                        android:id="@+id/ratePassengerSubmission3"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ratePassengerName2"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="125dp"
+                        android:layout_toEndOf="@+id/ratePassengerImage2"
+                        android:numStars="5"
+                        android:rating="2.5" />
+
+                    <ImageView
+                        android:id="@+id/ratePassengerImage"
+                        android:layout_width="62dp"
+                        android:layout_height="49dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginTop="70dp"
+                        app:srcCompat="@drawable/usersmall" />
+
+                    <TextView
+                        android:id="@+id/ratePassengerName"
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/ratePassengerImage2"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="63dp"
+                        android:layout_toEndOf="@+id/ratePassengerImage2"
+                        android:text="Name........." />
+
+                    <RatingBar
+                        android:id="@+id/ratePassengerSubmission"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ratePassengerName2"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="63dp"
+                        android:layout_toEndOf="@+id/ratePassengerImage2"
+                        android:numStars="5"
+                        android:rating="2.5" />
+
+                    <ImageView
+                        android:id="@+id/ratePassengerImage2"
+                        android:layout_width="62dp"
+                        android:layout_height="49dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginTop="7dp"
+                        app:srcCompat="@drawable/usersmall" />
+
+                    <TextView
+                        android:id="@+id/ratePassengerName2"
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/ratePassengerImage2"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_toEndOf="@+id/ratePassengerImage2"
+                        android:text="Name........." />
+
+                    <RatingBar
+                        android:id="@+id/ratePassengerSubmission2"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ratePassengerName2"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_toEndOf="@+id/ratePassengerImage2"
+                        android:numStars="5"
+                        android:rating="2.5" />
+
+                    <Button
+                        android:id="@+id/ratePassengersSubmitButton"
+                        android:layout_width="119dp"
+                        android:layout_height="35dp"
+                        android:layout_alignEnd="@+id/ratePassengerSubmission2"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="-11dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/colorPrimary"
+                        android:text="Submit"
+                        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

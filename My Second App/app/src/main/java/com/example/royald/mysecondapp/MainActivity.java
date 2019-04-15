@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        //mAuth.signOut();
 
         //If user provides valid log in information this will log them into the app and change the screen
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {

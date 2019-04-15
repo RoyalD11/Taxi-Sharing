@@ -1,0 +1,18 @@
+problems ran into across dev
+
+app crash on new android devices
+	needed to add <uses-library android:name="org.apache.http.legacy" android:required="false" /> to manifest
+	this was a bug in google play services on googles end, this was the temp fix that they turned into the real fix
+
+app refused to sign in or create account
+	Firebase required 6 character passwords, but would not prompt that
+	log file revelaed error
+
+google maps api would not work, crash on load
+	'com.google.android.gms:play-services-maps:16.0.0' was the wrong version
+	once version updated it worked perfectly
+
+request permissions for location was crashing application
+	method i was asking for permissions was crashing application
+	it was a logic error, permission check was after map load so prompt to ask for permission would
+	never trigger causing a crash when permission was not available.
