@@ -68,7 +68,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     Location pickup = new Location(LocationManager.GPS_PROVIDER);
     LocationRequest locationRequest;
     private SupportMapFragment mapFragment;
-    private Marker driverLocationMarker;
+    private Marker driverLocationMarker, pickupMarker;
     private LatLng pickupLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -76,6 +76,9 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private boolean driverFound = false;
     private int radius = 1;
     private String foundDriverID;
+    private GeoQuery driverQuery;
+    private DatabaseReference driverLocationRef;
+    private ValueEventListener driverLocationRefListener;
 
     //Vars used for accessing the database for information
     private FirebaseAuth mAuth;
@@ -83,7 +86,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private String userId;
     private String imageUrl;
 
-    //Vars for screen elements to be referenced later
+    //Vars for initial screen elements to be referenced later
     private ImageView profileButton;
     private Button findMatchPrompt;
     private TextView searchingText;
@@ -93,7 +96,6 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private CardView preMatchInfo, driverInfo, passengerInfo, acceptPromptView, declinePromptView;
     private TextView matchTitle;
     private Button acceptMatch, declineMatch, acceptYes, acceptNo, declineYes, declineNo;
-
 
     //Vars for Driver Information
     private TextView driverNameView, driverCarMake, driverLicensePlate, distanceTitleView, distanceAmountView;
@@ -228,7 +230,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
                 //Sets a marker at the pickup location
                 pickupLocation = new LatLng(pickup.getLatitude(), pickup.getLongitude());
-                mMap.addMarker((new MarkerOptions().position(pickupLocation).title("Pickup Location")));
+                pickupMarker = mMap.addMarker((new MarkerOptions().position(pickupLocation).title("Pickup Location")));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
@@ -265,7 +267,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
-        //Listeners to gauge users choice of actually accepting or declining a match
+        //Onclick listener to handle functionality when a user accepts a ride
         acceptYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,6 +275,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        //Onclick listener to remove the accept prompt
         acceptNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,13 +283,47 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        //On click listener for declining a ride
         declineYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //removes the listeners for the drivers location and for the driver database
+                driverQuery.removeAllListeners();
+                driverLocationRef.removeEventListener(driverLocationRefListener);
+
+                //Sets the customers id in the driver database to null and sets the found driver to null
+                if(foundDriverID != null){
+                    driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
+                    driverRef.child("customerRideId").setValue(null);
+                    foundDriverID = null;
+                }
+
+                //reset variables to their initial values
+                driverFound = false;
+                radius = 1;
+
+                //remove the pickup location for the user from the database
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+                GeoFire geoFireRequest = new GeoFire(requestRef);
+                geoFireRequest.removeLocation(userId);
+
+                //Remove the pickup marker and the driver marker from the screen
+                if(pickupMarker != null){
+                    pickupMarker.remove();
+                }
+
+                if(driverLocationMarker != null){
+                    driverLocationMarker.remove();
+                }
+
+                //Call function that hides screen elements and resets the screen to pre match mode
+                removePrompt(v);
             }
         });
 
+        //Onclick listener to remove the decline prompt
         declineNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,7 +344,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
         //Query the database for the driver closest to the passenger, checks in a circle around the passengers location, radius starts at 1km and is
         //increased by one for every iteration that does not find a driver.
-        GeoQuery driverQuery = driverLocationGeofire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
+        driverQuery = driverLocationGeofire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
         driverQuery.removeAllListeners(); //removes the listener before opening the query so no errors occur
 
         //Listener that does the query
@@ -407,10 +444,10 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
         //Gets reference to the database where the active drivers location is stored
         //REMEMBER TO CHANGE THIS WHEN MOH UPDATES DATABASE
-        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driverAvailable").child(foundDriverID).child("l");
+        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driverAvailable").child(foundDriverID).child("l");
 
         //Starts an event listener that is called each time the drivers location is changed
-        driverLocationRef.addValueEventListener(new ValueEventListener() {
+        driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             //Runs every time the drivers location changes
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -583,6 +620,16 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     //Removes the find match prompt and displays the information that was on the activity originally
     public void removePrompt(View view) {
         (findViewById(R.id.findMatchPromptView)).setVisibility(View.GONE);
+        declinePromptView.setVisibility(View.GONE);
+        preMatchInfo.setVisibility(View.GONE);
+        driverInfo.setVisibility(View.GONE);
+        passengerInfo.setVisibility(View.GONE);
+        matchTitle.setVisibility(View.GONE);
+        acceptMatch.setVisibility(View.GONE);
+        declineMatch.setVisibility(View.GONE);
+
+        distanceTitleView.setVisibility(View.GONE);
+        distanceAmountView.setVisibility(View.GONE);
 
         ((ImageView) findViewById(R.id.userProfileButton)).setVisibility(View.VISIBLE);
         ((TextView) findViewById(R.id.profileText)).setVisibility(View.VISIBLE);
