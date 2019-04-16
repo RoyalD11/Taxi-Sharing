@@ -16,3 +16,5 @@ request permissions for location was crashing application
 	method i was asking for permissions was crashing application
 	it was a logic error, permission check was after map load so prompt to ask for permission would
 	never trigger causing a crash when permission was not available.
+
+Log out bug, crashes when signing out as it attempts to get the current user id for some reason even though its left the page
