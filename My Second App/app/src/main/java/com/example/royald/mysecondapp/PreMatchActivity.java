@@ -9,6 +9,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Looper;
+import android.provider.CalendarContract;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -402,6 +404,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void toUserProfile(View view) {
         Intent intent = new Intent(this, UserProfile.class);
         startActivity(intent);
+        finish();
+        return;
     }
 
     //Displays the find match prompt when the find match button is pressed
@@ -444,4 +448,18 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         searchingText.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("CustomerLocation");
+        DatabaseReference userRefPickup = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+
+        GeoFire userGeo = new GeoFire(userRef);
+        GeoFire userGeoPickup = new GeoFire(userRefPickup);
+
+        userGeo.removeLocation(userId);
+        userGeoPickup.removeLocation(userId);
+    }
 }
