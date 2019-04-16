@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        //mAuth.signOut();
+        //mAuth.signOut(); //Used to force sign the user out if there is ever an error in the code, so the app will default to the sign in screen.
 
         //If user provides valid log in information this will log them into the app and change the screen
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {

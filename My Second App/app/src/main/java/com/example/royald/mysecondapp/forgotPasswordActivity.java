@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+//NOT FULLY IMPLEMENTED, WAS PLANNED AS A FUTURE FEATURE AND NEVER IMPLEMENTED
 public class forgotPasswordActivity extends AppCompatActivity {
 
     @Override
