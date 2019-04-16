@@ -252,6 +252,7 @@ public class signUpScreen extends AppCompatActivity {
                                 userData.put("Match Q2", currentQ2Answer);
                                 userData.put("Match Q3", currentQ3Answer);
                                 userData.put("Rating", 0.0f);
+                                userData.put("Searching", "No");
 
                                 //Adds the map to the user based off their user ID
                                 myDatabase.setValue(userData);

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Float.parseFloat;
+
 public class PreMatchActivity extends FragmentActivity implements OnMapReadyCallback{
 
     //Vars used to either display the map or display elements on the map
@@ -76,7 +79,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
     //Vars used for accessing the database for information
     private FirebaseAuth mAuth;
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, driverRef, passOneRef, passTwoRef;
     private String userId;
     private String imageUrl;
 
@@ -85,6 +88,18 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private Button findMatchPrompt;
     private TextView searchingText;
     private Spinner promptQ1Spin, promptQ2Spin, promptQ3Spin, promptQ4Spin;
+
+    //Vars for showing the match found prompt
+    private CardView preMatchInfo, driverInfo, passengerInfo, acceptPromptView, declinePromptView;
+    private TextView matchTitle;
+    private Button acceptMatch, declineMatch, acceptYes, acceptNo, declineYes, declineNo;
+
+
+    //Vars for Driver Information
+    private TextView driverNameView, driverCarMake, driverLicensePlate, distanceTitleView, distanceAmountView;
+    private String driverImageUrl;
+    private ImageView driverImageView;
+    private RatingBar driverRatingView;
 
     //Runs once the activity is opened on the device
     @Override
@@ -138,6 +153,33 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         pickup.setLatitude(45.322722222222225);
         pickup.setLongitude(-75.6665);
 
+        //Get reference to the match found information on the screen
+        preMatchInfo = (CardView) findViewById(R.id.preMatchInformationView);
+        driverInfo = (CardView) findViewById(R.id.driverInfoView);
+        passengerInfo = (CardView) findViewById(R.id.passengerInfoView);
+        matchTitle = (TextView) findViewById(R.id.matchFoundTitle);
+
+        //Reference to the accept and decline buttons
+        acceptMatch = (Button) findViewById(R.id.acceptButton);
+        declineMatch = (Button) findViewById(R.id.declineButton);
+        acceptYes = (Button) findViewById(R.id.acceptConfirmButton);
+        acceptNo = (Button) findViewById(R.id.acceptRejectButton);
+        declineYes = (Button) findViewById(R.id.declineConfirmButton);
+        declineNo = (Button) findViewById(R.id.declineRejectButton);
+
+        //Reference the the driver information areas
+        driverNameView = (TextView) findViewById(R.id.driverName);
+        driverCarMake = (TextView) findViewById(R.id.carMake);
+        driverLicensePlate = (TextView) findViewById(R.id.carPlate);
+        driverImageView = (ImageView) findViewById(R.id.driverPic);
+        driverRatingView = (RatingBar) findViewById(R.id.driverRating);
+        distanceTitleView = (TextView) findViewById(R.id.distanceTitle);
+        distanceAmountView = (TextView) findViewById(R.id.distanceAmount);
+
+        //Reference to the prompts to accept or decline matches
+        acceptPromptView = (CardView) findViewById(R.id.acceptPromptView);
+        declinePromptView = (CardView) findViewById(R.id.declinePromptView);;
+
         //Listener used to get the profile image of the user to display on the screen
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -188,7 +230,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                 pickupLocation = new LatLng(pickup.getLatitude(), pickup.getLongitude());
                 mMap.addMarker((new MarkerOptions().position(pickupLocation).title("Pickup Location")));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
                 //saves pickup location to the database
                 DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
@@ -201,10 +243,58 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                 //Calls the function to get the closest driver
                 getClosestDriver();
 
+                //Calls the function to display the match found prompt
+                matchFoundPrompt(v);
 
             }
         });
+
+        //Listener to see if the accept match button was pressed
+        acceptMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acceptMatchPrompt(v);
+            }
+        });
+
+        //Listener to see if the decline match button was pressed
+        declineMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                declineMatchPrompt(v);
+            }
+        });
+
+        //Listeners to gauge users choice of actually accepting or declining a match
+        acceptYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        acceptNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAcceptPrompt(v);
+            }
+        });
+
+        declineYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        declineNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeDeclinePrompt(v);
+            }
+        });
     }
+
 
     //Finds the driver closest to the user
     private void getClosestDriver() {
@@ -232,7 +322,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
                     //Give the driver found the Id of the customer who found them. Figure out how to append this id to an array so multiple can find the same driver
                     //LOOK HERE
-                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
+                    driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     HashMap map = new HashMap();
                     map.put("customerRideId", customerId);
@@ -243,6 +333,48 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                     getDriverLocation();
                     searchingText.setText("Finding Passengers.");
 
+                    //uses the database reference to get the drivers information and save it the the given text views
+                    driverRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //If data exists and there is more than one child in the section of the database i'm referencing
+                            if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+
+                                //Create a map that stores all the data
+                                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                                if(map.get("Name") != null){
+                                    String driverName = map.get("Name").toString();
+                                    driverNameView.setText(driverName);
+                                }
+
+                                if(map.get("Car Make") != null){
+                                    String driverCar = map.get("Car Make").toString();
+                                    driverCarMake.setText(driverCar);
+                                }
+
+                                if(map.get("License Plate") != null){
+                                    String driverPlate = map.get("License Plate").toString();
+                                    driverLicensePlate.setText(driverPlate);
+                                }
+
+                                if(map.get("profileImageUrl") != null){
+                                    driverImageUrl = map.get("profileImageUrl").toString();
+                                    Glide.with(getApplication()).load(driverImageUrl).into(driverImageView);
+                                }
+
+                                if(map.get("Rating") != null){
+                                    float driverCurrentRating = parseFloat(map.get("Rating").toString());
+                                    driverRatingView.setRating(driverCurrentRating);
+                                }
+                            }
+                        }
+
+                        //Useless function needed so no errors arise
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
                 }
             }
 
@@ -302,6 +434,27 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                         driverLocationMarker.remove();
                     }
 
+                    //These variables used to calculate the distance between the user and the driver
+                    //First set is for user location second set is for driver location
+                    Location userLocation = new Location("");
+                    userLocation.setLatitude(pickupLocation.latitude);
+                    userLocation.setLongitude(pickupLocation.longitude);
+
+                    Location driverCurrentLocation = new Location("");
+                    driverCurrentLocation.setLatitude(driverLatLng.latitude);
+                    driverCurrentLocation.setLongitude(driverLatLng.longitude);
+
+                    //Display the distance the driver is away on the screen after converting it to Kms
+                    float distance = userLocation.distanceTo(driverCurrentLocation);
+                    float distanceKm = distance/1000;
+
+                    if(distance < 100){
+                        distanceAmountView.setText("Driver Arriving");
+                    }
+                    else{
+                        distanceAmountView.setText(String.valueOf(String.format("%.1f", distanceKm)) + "Km");
+                    }
+
                     //Create a marker and add it to the map for the drivers location
                     driverLocationMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
                 }
@@ -313,7 +466,6 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
             }
         });
-
     }
 
 
@@ -354,17 +506,16 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     LocationCallback locationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult){
-            final String customerId = mAuth.getCurrentUser().getUid();
             for(Location location : locationResult.getLocations()){
                 lastLocation = location;
-
-                LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
 
                 //Saves customers current location to the database
                 DatabaseReference currentRef = FirebaseDatabase.getInstance().getReference("CustomerLocation");
                 GeoFire geoFireCurrent = new GeoFire(currentRef);
-                geoFireCurrent.setLocation(customerId, new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()));
+                geoFireCurrent.setLocation(userId, new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()));
 
+                //This is used to center the camera on the users location, not implemented due to not being needed. Can be added later.
+                //LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 //mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
             }
@@ -404,8 +555,6 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void toUserProfile(View view) {
         Intent intent = new Intent(this, UserProfile.class);
         startActivity(intent);
-        finish();
-        return;
     }
 
     //Displays the find match prompt when the find match button is pressed
@@ -446,20 +595,38 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void searchingForMatchPrompt(View view){
         (findViewById(R.id.findMatchPromptView)).setVisibility(View.GONE);
         searchingText.setVisibility(View.VISIBLE);
+        myRef.child("Searching").setValue("Yes");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    //Hides the searching information and displays the match found information
+    public void matchFoundPrompt(View view){
+        searchingText.setVisibility(View.GONE);
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("CustomerLocation");
-        DatabaseReference userRefPickup = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+        preMatchInfo.setVisibility(View.VISIBLE);
+        driverInfo.setVisibility(View.VISIBLE);
+        passengerInfo.setVisibility(View.VISIBLE);
+        matchTitle.setVisibility(View.VISIBLE);
+        acceptMatch.setVisibility(View.VISIBLE);
+        declineMatch.setVisibility(View.VISIBLE);
 
-        GeoFire userGeo = new GeoFire(userRef);
-        GeoFire userGeoPickup = new GeoFire(userRefPickup);
+        distanceTitleView.setVisibility(View.VISIBLE);
+        distanceAmountView.setVisibility(View.VISIBLE);
 
-        userGeo.removeLocation(userId);
-        userGeoPickup.removeLocation(userId);
+    }
+
+    public void declineMatchPrompt(View view){
+        declinePromptView.setVisibility(View.VISIBLE);
+    }
+
+    private void removeDeclinePrompt(View view) {
+        declinePromptView.setVisibility(View.GONE);
+    }
+
+    public void acceptMatchPrompt(View view){
+        acceptPromptView.setVisibility(View.VISIBLE);
+    }
+
+    private void removeAcceptPrompt(View view) {
+        acceptPromptView.setVisibility(View.GONE);
     }
 }

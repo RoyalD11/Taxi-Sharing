@@ -220,7 +220,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:layout_gravity="top|center_horizontal"/>
 
     <android.support.v7.widget.CardView
         android:id="@+id/passengerInfoView"
@@ -229,7 +230,8 @@
         android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_gravity="bottom|right">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -260,7 +262,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="33dp"
-                    app:srcCompat="@drawable/usersmall" />
+                    android:src="@drawable/usersmall"
+                    android:scaleType="fitXY"/>
 
                 <ImageView
                     android:id="@+id/passPic2"
@@ -270,7 +273,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="9dp"
-                    app:srcCompat="@drawable/usersmall" />
+                    android:src="@drawable/usersmall"
+                    android:scaleType="fitXY"/>
 
                 <ImageView
                     android:id="@+id/passPic3"
@@ -280,7 +284,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="10dp"
-                    app:srcCompat="@drawable/usersmall" />
+                    android:src="@drawable/usersmall"
+                    android:scaleType="fitXY"/>
 
                 <TextView
                     android:id="@+id/namePass1"
@@ -362,7 +367,8 @@
         android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_gravity="bottom|left">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -390,7 +396,8 @@
                 android:layout_marginStart="52dp"
                 android:layout_marginTop="29dp"
                 android:layout_marginEnd="53dp"
-                app:srcCompat="@drawable/usersmall" />
+                android:src="@drawable/usersmall"
+                android:scaleType="fitXY"/>
 
             <TextView
                 android:id="@+id/driverName"
@@ -453,7 +460,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:layout_gravity="bottom"/>
 
     <Button
         android:id="@+id/declineButton"
@@ -466,17 +474,39 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        android:layout_gravity="bottom|right"/>
+
+    <TextView
+        android:id="@+id/distanceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Driver Distance: "
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="296dp"
         android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/distanceAmount"
+        android:layout_width="124dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="105dp"
+        android:layout_marginTop="296dp"
+        android:text="Amount"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/preMatchInformationView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginTop="260dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="320dp"
+        app:layout_constraintEnd_toEndOf="@id/driverInfoView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/driverInfoView"
+        app:layout_constraintTop_toTopOf="@id/driverInfoView"
         android:visibility="gone">
 
         <RelativeLayout
@@ -501,7 +531,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="0dp"
                 android:layout_toEndOf="@+id/pickUpTitle"
-                android:text="Ottawa Airport Arrivals Post 12" />
+                android:text="Arrivals Post 12" />
 
             <TextView
                 android:id="@+id/preCostTitle"
@@ -534,10 +564,11 @@
         android:layout_width="344dp"
         android:layout_height="161dp"
         android:layout_marginTop="144dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        android:layout_gravity="center_horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -588,7 +619,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center_horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -664,7 +696,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="33dp"
-                app:srcCompat="@drawable/usersmall" />
+                app:srcCompat="@drawable/usersmall"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/passPic2Extended"
@@ -674,7 +707,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="28dp"
-                app:srcCompat="@drawable/usersmall" />
+                app:srcCompat="@drawable/usersmall"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/passPic3Extended"
@@ -684,7 +718,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="28dp"
-                app:srcCompat="@drawable/usersmall" />
+                app:srcCompat="@drawable/usersmall"
+                android:scaleType="fitXY"/>
 
             <TextView
                 android:id="@+id/namePass1Extended"
@@ -799,7 +834,8 @@
                 android:layout_marginStart="52dp"
                 android:layout_marginTop="29dp"
                 android:layout_marginEnd="53dp"
-                app:srcCompat="@drawable/usersmall" />
+                app:srcCompat="@drawable/usersmall"
+                android:scaleType="fitXY"/>
 
             <TextView
                 android:id="@+id/driverNameExtended"
@@ -1141,4 +1177,5 @@
         android:visibility="gone"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="25dp"/>
+
 </FrameLayout>

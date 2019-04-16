@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.geofire.GeoFire;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +44,8 @@ public class UserProfile extends AppCompatActivity {
     private ImageView profileImage;
 
     private float rating;
+
+    boolean loggingOut = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,9 +161,37 @@ public class UserProfile extends AppCompatActivity {
 
     //Function called when sign out button is pressed, signs out the current user and returns to the main activity screen
     public void signOut(View view){
+        loggingOut = true;
+        disconnectUser();
+
         mAuth.signOut();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
+        return;
+    }
+
+    //Removes the users location information from the database when they sign out
+    private void disconnectUser(){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("CustomerLocation");
+        DatabaseReference userRefPickup = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+
+        GeoFire userGeo = new GeoFire(userRef);
+        GeoFire userGeoPickup = new GeoFire(userRefPickup);
+
+        userGeoPickup.removeLocation(userId);
+        userGeo.removeLocation(userId);
+
+    }
+
+    //Calls when the activity stops, if the user has not been disconnected it disconnects
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(!loggingOut){
+            disconnectUser();
+        }
     }
 
 }
