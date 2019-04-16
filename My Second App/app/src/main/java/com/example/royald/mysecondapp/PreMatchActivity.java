@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -53,14 +56,21 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
     private GoogleMap mMap;
     Location lastLocation;
+    Location pickup = new Location(LocationManager.GPS_PROVIDER);
     LocationRequest locationRequest;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private boolean makeRequest = false;
+    //Vars used for finding a driver
+    private boolean driverFound = false;
+    private int radius = 1;
+    private String foundDriverID;
 
     private SupportMapFragment mapFragment;
+
     private Marker pickupLocationMarker;
+
+    private LatLng pickupLocation;
 
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
@@ -70,6 +80,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private ImageView profileButton;
 
     private Button findMatchPrompt;
+
+    private TextView searchingText;
 
     private Spinner promptQ1Spin, promptQ2Spin, promptQ3Spin, promptQ4Spin;
 
@@ -114,6 +126,11 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
         findMatchPrompt = (Button) findViewById(R.id.findMatchPromptButton);
 
+        searchingText = (TextView) findViewById(R.id.searchingForDriverTitle);
+
+        pickup.setLatitude(45.322722222222225);
+        pickup.setLongitude(-75.6665);
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -151,6 +168,68 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                 myRef.child("Match Q5").setValue(promptQ2);
                 myRef.child("Match Q6").setValue(promptQ3);
                 myRef.child("Match Q7").setValue(promptQ4);
+
+                //Saves customers current location to the database
+                DatabaseReference currentRef = FirebaseDatabase.getInstance().getReference("CustomerLocation");
+                GeoFire geoFireCurrent = new GeoFire(currentRef);
+                geoFireCurrent.setLocation(user_id, new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()));
+
+                //Sets a marker at the pickup location
+                pickupLocation = new LatLng(pickup.getLatitude(), pickup.getLongitude());
+                mMap.addMarker((new MarkerOptions().position(pickupLocation).title("Pickup Location")));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+
+                //saves pickup location to the database
+                DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+                GeoFire geoFireRequest = new GeoFire(requestRef);
+                geoFireRequest.setLocation(user_id, new GeoLocation(pickup.getLatitude(), pickup.getLongitude()));
+
+                //calls this method
+                searchingForMatchPrompt(v);
+
+                getClosestDriver();
+
+
+            }
+        });
+    }
+
+    private void getClosestDriver() {
+        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driverAvailable");
+
+        GeoFire driverLocationGeofire = new GeoFire(driverLocation);
+
+        GeoQuery driverQuery = driverLocationGeofire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
+        driverQuery.removeAllListeners();
+
+        driverQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if(!driverFound) {
+                    driverFound = true;
+                    foundDriverID = key;
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if(!driverFound){
+                    radius+=1;
+                    getClosestDriver();
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
             }
         });
     }
@@ -185,18 +264,16 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-
+    //This method (disguised as a variable) gets the location of the user
     LocationCallback locationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult){
             for(Location location : locationResult.getLocations()){
                 lastLocation = location;
 
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-
+                LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                //mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
             }
         }
     };
@@ -260,6 +337,11 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         ((TextView) findViewById(R.id.destinationText)).setVisibility(View.VISIBLE);
         ((EditText) findViewById(R.id.enterDestination)).setVisibility(View.VISIBLE);
         ((Button) findViewById(R.id.findMatch)).setVisibility(View.VISIBLE);
+    }
+
+    public void searchingForMatchPrompt(View view){
+        (findViewById(R.id.findMatchPromptView)).setVisibility(View.GONE);
+        searchingText.setVisibility(View.VISIBLE);
     }
 
 }
