@@ -25,3 +25,8 @@ user profile would not return to maps activity
 	was accdentally killing the activity when i switched screens, removed a finish(); return; fixed it
 
 app continuously updates location even when signed out
+
+
+Credit this guy for taxi
+https://www.flaticon.com/free-icon/taxi_1615113#term=taxi&page=1&position=3
+<div>Icons made by <a href="https://www.flaticon.com/authors/nikita-golubev" title="Nikita Golubev">Nikita Golubev</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>

@@ -44,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -309,6 +310,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                 GeoFire geoFireRequest = new GeoFire(requestRef);
                 geoFireRequest.removeLocation(userId);
 
+                myRef.child("Searching").setValue("No");
+
                 //Remove the pickup marker and the driver marker from the screen
                 if(pickupMarker != null){
                     pickupMarker.remove();
@@ -493,7 +496,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                     }
 
                     //Create a marker and add it to the map for the drivers location
-                    driverLocationMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
+                    driverLocationMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver")
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher_taxi_foreground)));
                 }
             }
 
