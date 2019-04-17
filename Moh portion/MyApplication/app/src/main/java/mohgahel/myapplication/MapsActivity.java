@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.media.Image;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -57,6 +59,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedInputStream;
 import java.sql.Driver;
 import java.util.ArrayList;
@@ -74,8 +78,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Polyline> polylines;
 
     private String customerID = "", destination;
-    private LatLng destinationLatLng, pickupLatLng;
+    private LatLng destLatLng, pickupLatLng;
     private float rideDistance;
+    private int status = 0;
+    String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+    private LinearLayout customerInfo;
+    private ImageView customerProfilePic;
+    private TextView customerName, customerPhone;
+
 
     private SupportMapFragment mapFragment;
 
@@ -91,20 +102,184 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        customerInfo = (LinearLayout) findViewById(R.id.customerInfo);
+        customerProfilePic = (ImageView) findViewById(R.id.customerProfilePic);
+        customerName = (TextView) findViewById(R.id.customerName);
+        customerPhone = (TextView) findViewById(R.id.customerPhone);
+
+        getAssignedClient();
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    //determine the customer(s) for which the driver will be servicing
+    private void getAssignedClient() {
+        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedClients = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRideId");
+        assignedClients.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    status = 1;
+                    customerID = dataSnapshot.getValue().toString();
+                    getAssignedClientPickUpLocation();//determine location
+                    getAssignedClientDestination();//determine destination
+                    getAssignedClientInfo();//determine information
+                }else {
+
+                    endRide();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    Marker pickupMarker;
+    private DatabaseReference assignedCustomerPickupLocationRef;
+    private ValueEventListener assignedCustomerPickupLocationRefListener;
+
+    private void getAssignedClientPickUpLocation() {
+        //retrieve customer location for pickup from database
+        assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("CustomerPickupLocation").child(customerID).child("l");
+        assignedCustomerPickupLocationRefListener = assignedCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && !customerID.equals("")) {
+                    List<Object> mapList = (List<Object>) dataSnapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    if(mapList.get(0) != null) {
+                        locationLat = Double.parseDouble(mapList.get(0).toString());
+                    }
+                    if(mapList.get(1) != null) {
+                        locationLng = Double.parseDouble(mapList.get(1).toString());
+                    }
+                    pickupLatLng = new LatLng(locationLat,locationLng);//set coordinates for pickup
+                    //set map marker on coordinates
+                    pickupMarker = map.addMarker(new MarkerOptions().position(pickupLatLng).title("Customer Pickup Location"));//icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                    getRouteToMarker(pickupLatLng);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //display path to marker
+    private void getRouteToMarker(LatLng pickupLatLng) {
+        if (pickupLatLng != null && lastLocation != null) {
+            Routing routing = new Routing.Builder()
+                    .key("AIzaSyAw9j67DZdCh6Du6iZgqCj0mD-V3aK6WHQ")
+                    .travelMode(AbstractRouting.TravelMode.DRIVING)
+                    .withListener(this)
+                    .alternativeRoutes(false)
+                    .waypoints(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), pickupLatLng)
+                    .build();
+            routing.execute();
+        }
+    }
+
+    //determine the customer's destination
+    private void getAssignedClientDestination() {
+        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedClientRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
+        assignedClientRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Map<String, Object> mapKey = (Map<String, Object>) dataSnapshot.getValue();
+                    if(mapKey.get("destination") != null) {
+                        destination = mapKey.get("destination").toString();
+                    }
+                    else {
+
+                    }
+
+                    Double destLat = 0.0;
+                    Double destLng;
+                    if(mapKey.get("destLat") != null) {
+                        destLat = Double.valueOf(mapKey.get("destLat").toString());
+                    }
+                    if(mapKey.get("destLng") != null) {
+                        destLng = Double.valueOf(mapKey.get("destLng").toString());
+                        destLatLng = new LatLng(destLat, destLng);
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getAssignedClientInfo() {
+        customerInfo.setVisibility(View.VISIBLE);
+        DatabaseReference customerData = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(customerID);
+        customerData.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("First Name") != null) {
+                        customerName.setText(map.get("First Name").toString());
+                    }
+                    if(map.get("Phone Number") != null) {
+                        customerPhone.setText(map.get("Phone Number").toString());
+                    }
+                    if(map.get("profileImageUrl") != null) {
+                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(customerProfilePic);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void endRide() {
+
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
+        driverRef.removeValue();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerPickupLocation");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(customerID);
+        customerID="";
+        rideDistance = 0;
+
+        if(pickupMarker != null){
+            pickupMarker.remove();
+        }
+
+        if (assignedCustomerPickupLocationRefListener != null){
+            assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+        }
+        customerInfo.setVisibility(View.GONE);
+        customerName.setText("");
+        customerPhone.setText("");
+        //customerDestination.setText("Destination: --");
+        //customerProfilePic.setImageResource(R.mipmap.ic_default_user);
+
+    }
+
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {   //displays the map with your location
         map = googleMap;
 
         locationRequest = new LocationRequest();
@@ -129,6 +304,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         */
     }
 
+    //get permission to use location services
     private void checkLocationPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -150,12 +326,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
+    //opens driver display when pressed
     public void driverProfile(View view) {
         Intent intent = new Intent(this, driverProfile.class);
         startActivity(intent);
     }
 
-
+    //constantly updates driver position on the map
     LocationCallback locationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -168,10 +346,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    map.animateCamera(CameraUpdateFactory.zoomTo(13));
+                    //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    //map.animateCamera(CameraUpdateFactory.zoomTo(16));
 
-                    String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    //String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     DatabaseReference availability = FirebaseDatabase.getInstance().getReference("driverAvailable");
                     DatabaseReference working = FirebaseDatabase.getInstance().getReference("driverWorking");
                     GeoFire geoFireAvail = new GeoFire(availability);
@@ -184,8 +362,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             break;
 
                         default:
-                            geoFireWork.removeLocation(driverID);
-                            geoFireAvail.setLocation(driverID, new GeoLocation(location.getLatitude(), location.getLongitude()));
+                            geoFireAvail.removeLocation(driverID);
+                            geoFireWork.setLocation(driverID, new GeoLocation(location.getLatitude(), location.getLongitude()));
                             break;
                     }
                 }
@@ -194,6 +372,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     };
+
+    public void disconnectDriver(){
+        if(fusedLocationClient != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driverAvailable");
+
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(driverID);
+    }
+
 
     @Override
     public void onRoutingFailure(RouteException e) {
@@ -207,14 +397,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRoutingStart() {
     }
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRoute) {
+        if(polylines.size()>0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
 
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i <route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = map.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onRoutingCancelled() {
+    }
+
+    private void erasePolylines(){
+        for(Polyline line : polylines){
+            line.remove();
+        }
+        polylines.clear();
     }
 
 }

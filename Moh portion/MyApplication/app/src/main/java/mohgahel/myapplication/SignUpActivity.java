@@ -1,6 +1,12 @@
 package mohgahel.myapplication;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -8,16 +14,25 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +40,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Button confirmButton;
     private EditText email, password, firstName, phone, car, plate;
     private String driverEmail, driverPassword, driverID, driverName, driverPhone, driverCar, driverPlate;
+    private ImageView profilePic;
+    private Uri resultUri;
     private FirebaseAuth auth;
     private DatabaseReference driverDatabase;
     private FirebaseAuth.AuthStateListener fireBaseAuthListener;
@@ -47,6 +64,17 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         };
+
+        profilePic = (ImageView) findViewById(R.id.driverProfile);
+
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+            }
+        });
 
         confirmButton = (Button) findViewById(R.id.confirmSignUp);
 
@@ -94,8 +122,51 @@ public class SignUpActivity extends AppCompatActivity {
                                 drivers.put("Phone Number", driverPhone);
                                 drivers.put("Car Make", driverCar);
                                 drivers.put("License Plate", driverPlate);
+                                drivers.put("Rating", 0.0f);
+
                                 DriverDb.setValue(drivers);
 
+                                if(resultUri != null){
+                                    final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(driverID);
+                                    Bitmap bitmap = null;
+
+                                    try {
+                                        bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
+                                    }
+                                    catch (IOException e){
+                                        e.printStackTrace();
+                                    }
+
+                                    ByteArrayOutputStream boas = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 20, boas);
+                                    byte[] data = boas.toByteArray();
+                                    UploadTask uploadTask = filePath.putBytes(data);
+
+                                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                        @Override
+                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                            if(!task.isSuccessful()){
+                                                throw task.getException();
+                                            }
+                                            return filePath.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful()){
+                                                Uri downloadUrl = task.getResult();
+
+                                                DatabaseReference myDatabaseImage = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
+
+                                                Map imageMap = new HashMap();
+
+                                                imageMap.put("profileImageUrl", downloadUrl.toString());
+
+                                                myDatabaseImage.updateChildren(imageMap);
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         }
                     });
@@ -105,6 +176,16 @@ public class SignUpActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            profilePic.setImageURI(resultUri);
+        }
     }
 
     public void carInfo(View view){

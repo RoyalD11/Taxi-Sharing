@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class driverProfile extends AppCompatActivity {
     private Button logout;
@@ -15,17 +16,13 @@ public class driverProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_profile);
 
+    }
+    public void logout(View view) {
         logout = (Button) findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(driverProfile.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-
-        });
+        //MapsActivity map = new MapsActivity();
+        //map.disconnectDriver();
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
