@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -55,6 +56,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +85,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
     //Vars used for accessing the database for information
     private FirebaseAuth mAuth;
-    private DatabaseReference myRef, driverRef, passOneRef, passTwoRef;
+    private DatabaseReference myRef, driverRef;
     private String userId;
     private String imageUrl;
 
@@ -100,9 +102,19 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
     //Vars for Driver Information
     private TextView driverNameView, driverCarMake, driverLicensePlate, distanceTitleView, distanceAmountView;
+    private TextView driverNameViewExtended, driverCarMakeExtended, driverLicensePlateExtended;
     private String driverImageUrl;
-    private ImageView driverImageView;
-    private RatingBar driverRatingView;
+    private ImageView driverImageView, driverImageViewExtended;
+    private RatingBar driverRatingView, driverRatingViewExtended;
+
+    //Vars to display passenger information
+    private TextView nameView, nameViewExtended;
+    private ImageView passengerImageView, passengerImageViewExtended;
+    private RatingBar passengerRatingView, passengerRatingViewExtended;
+    private String passengerImageUrl;
+    //ArrayList<String> customersSharingRide = new ArrayList<String>(); Was to be used to show multiple passengers, never worked
+
+    private boolean requestMade = false;
 
     //Runs once the activity is opened on the device
     @Override
@@ -176,12 +188,26 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         driverLicensePlate = (TextView) findViewById(R.id.carPlate);
         driverImageView = (ImageView) findViewById(R.id.driverPic);
         driverRatingView = (RatingBar) findViewById(R.id.driverRating);
+        driverNameViewExtended = (TextView) findViewById(R.id.driverNameExtended);
+        driverCarMakeExtended = (TextView) findViewById(R.id.carMakeExtended);
+        driverLicensePlateExtended = (TextView) findViewById(R.id.carPlateExtended);
+        driverImageViewExtended = (ImageView) findViewById(R.id.driverPicExtended);
+        driverRatingViewExtended = (RatingBar) findViewById(R.id.driverRatingExtended);
         distanceTitleView = (TextView) findViewById(R.id.distanceTitle);
         distanceAmountView = (TextView) findViewById(R.id.distanceAmount);
 
+        //Reference the Passenger information area
+        nameViewExtended = (TextView) findViewById(R.id.namePass1Extended);
+        passengerImageViewExtended = (ImageView) findViewById(R.id.passPic1Extended);
+        passengerRatingViewExtended = (RatingBar) findViewById(R.id.ratingPass1Extended);
+        nameView = (TextView) findViewById(R.id.namePass1);
+        passengerImageView = (ImageView) findViewById(R.id.passPic1);
+        passengerRatingView = (RatingBar) findViewById(R.id.ratingPass1);
+
         //Reference to the prompts to accept or decline matches
         acceptPromptView = (CardView) findViewById(R.id.acceptPromptView);
-        declinePromptView = (CardView) findViewById(R.id.declinePromptView);;
+        declinePromptView = (CardView) findViewById(R.id.declinePromptView);
+
 
         //Listener used to get the profile image of the user to display on the screen
         myRef.addValueEventListener(new ValueEventListener() {
@@ -212,43 +238,44 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         findMatchPrompt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(requestMade){
+                    endRide(v);
+                }
+                else{
 
-                //Get the current users id and reference the database at that users position
-                final String user_id = mAuth.getCurrentUser().getUid();
-                DatabaseReference myDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(user_id);
+                    requestMade = true;
+                    //Get the current users id and reference the database at that users position
+                    final String user_id = mAuth.getCurrentUser().getUid();
 
-                //finds the proper attributes to be saved
-                final String promptQ1 = promptQ1Spin.getSelectedItem().toString();
-                final String promptQ2 = promptQ2Spin.getSelectedItem().toString();
-                final String promptQ3 = promptQ3Spin.getSelectedItem().toString();
-                final String promptQ4 = promptQ4Spin.getSelectedItem().toString();
+                    //finds the proper attributes to be saved
+                    final String promptQ1 = promptQ1Spin.getSelectedItem().toString();
+                    final String promptQ2 = promptQ2Spin.getSelectedItem().toString();
+                    final String promptQ3 = promptQ3Spin.getSelectedItem().toString();
+                    final String promptQ4 = promptQ4Spin.getSelectedItem().toString();
 
-                //Sets these values to the database
-                myRef.child("Match Q4").setValue(promptQ1);
-                myRef.child("Match Q5").setValue(promptQ2);
-                myRef.child("Match Q6").setValue(promptQ3);
-                myRef.child("Match Q7").setValue(promptQ4);
+                    //Sets these values to the database
+                    myRef.child("Match Q4").setValue(promptQ1);
+                    myRef.child("Match Q5").setValue(promptQ2);
+                    myRef.child("Match Q6").setValue(promptQ3);
+                    myRef.child("Match Q7").setValue(promptQ4);
 
-                //Sets a marker at the pickup location
-                pickupLocation = new LatLng(pickup.getLatitude(), pickup.getLongitude());
-                pickupMarker = mMap.addMarker((new MarkerOptions().position(pickupLocation).title("Pickup Location")));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                    //Sets a marker at the pickup location
+                    pickupLocation = new LatLng(pickup.getLatitude(), pickup.getLongitude());
+                    pickupMarker = mMap.addMarker((new MarkerOptions().position(pickupLocation).title("Pickup Location")));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-                //saves pickup location to the database
-                DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
-                GeoFire geoFireRequest = new GeoFire(requestRef);
-                geoFireRequest.setLocation(user_id, new GeoLocation(pickup.getLatitude(), pickup.getLongitude()));
+                    //saves pickup location to the database
+                    DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+                    GeoFire geoFireRequest = new GeoFire(requestRef);
+                    geoFireRequest.setLocation(user_id, new GeoLocation(pickup.getLatitude(), pickup.getLongitude()));
 
-                //calls this method
-                searchingForMatchPrompt(v);
+                    //calls this method
+                    searchingForMatchPrompt(v);
 
-                //Calls the function to get the closest driver
-                getClosestDriver();
-
-                //Calls the function to display the match found prompt
-                matchFoundPrompt(v);
-
+                    //Calls the function to get the closest driver
+                    getClosestDriver();
+                }
             }
         });
 
@@ -272,7 +299,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         acceptYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                swapToRide(v);
             }
         });
 
@@ -289,40 +316,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
 
-                //removes the listeners for the drivers location and for the driver database
-                driverQuery.removeAllListeners();
-                driverLocationRef.removeEventListener(driverLocationRefListener);
-
-                //Sets the customers id in the driver database to null and sets the found driver to null
-                if(foundDriverID != null){
-                    driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
-                    driverRef.child("customerRideId").setValue(null);
-                    foundDriverID = null;
-                }
-
-                //reset variables to their initial values
-                driverFound = false;
-                radius = 1;
-
-                //remove the pickup location for the user from the database
-                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
-                GeoFire geoFireRequest = new GeoFire(requestRef);
-                geoFireRequest.removeLocation(userId);
-
-                myRef.child("Searching").setValue("No");
-
-                //Remove the pickup marker and the driver marker from the screen
-                if(pickupMarker != null){
-                    pickupMarker.remove();
-                }
-
-                if(driverLocationMarker != null){
-                    driverLocationMarker.remove();
-                }
-
-                //Call function that hides screen elements and resets the screen to pre match mode
-                removePrompt(v);
+                endRide(v);
             }
         });
 
@@ -356,63 +350,155 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             //Once the driver has been found this method saves the driver ID and gives the driver the customers ID that found it.
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if(!driverFound) {
-                    driverFound = true;
-                    foundDriverID = key;
+                if(!driverFound && requestMade) {
 
-                    //Give the driver found the Id of the customer who found them. Figure out how to append this id to an array so multiple can find the same driver
-                    //LOOK HERE
-                    driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
-                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    HashMap map = new HashMap();
-                    map.put("customerRideId", customerId);
-                    driverRef.updateChildren(map);
+                    DatabaseReference customerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(key);
+                    customerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    //Changes the text on the screen to say the driver was found then calls the location to get the drivers location
-                    searchingText.setText("Driver Found!");
-                    getDriverLocation();
-                    searchingText.setText("Finding Passengers.");
-
-                    //uses the database reference to get the drivers information and save it the the given text views
-                    driverRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //If data exists and there is more than one child in the section of the database i'm referencing
-                            if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
-
-                                //Create a map that stores all the data
-                                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-
-                                if(map.get("Name") != null){
-                                    String driverName = map.get("Name").toString();
-                                    driverNameView.setText(driverName);
+                            if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                                if(driverFound){
+                                    return;
                                 }
 
-                                if(map.get("Car Make") != null){
-                                    String driverCar = map.get("Car Make").toString();
-                                    driverCarMake.setText(driverCar);
-                                }
+                                driverFound = true;
+                                foundDriverID = dataSnapshot.getKey();
 
-                                if(map.get("License Plate") != null){
-                                    String driverPlate = map.get("License Plate").toString();
-                                    driverLicensePlate.setText(driverPlate);
-                                }
+                                //Give the driver found the Id of the customer who found them. Figure out how to append this id to an array so multiple can find the same driver
+                                //LOOK HERE
+                                driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
+                                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                                if(map.get("profileImageUrl") != null){
-                                    driverImageUrl = map.get("profileImageUrl").toString();
-                                    Glide.with(getApplication()).load(driverImageUrl).into(driverImageView);
-                                }
+                                DatabaseReference customerData = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(customerId);
 
-                                if(map.get("Rating") != null){
-                                    float driverCurrentRating = parseFloat(map.get("Rating").toString());
-                                    driverRatingView.setRating(driverCurrentRating);
-                                }
+                                //This chunk of code should add multiple user ids to the driver customer field, does not work.
+                                /*customersSharingRide.add(customerId);
+
+                                customersSearchingData.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+                                            for(DataSnapshot snapshot :dataSnapshot.getChildren()){
+                                                if(snapshot.child("Searching") != null){
+                                                    if(snapshot.child("Searching").getValue().equals("Yes")){
+                                                        customersSharingRide.add(snapshot.toString());
+                                                        Log.w("TESTING ARRAY", customersSharingRide.toString());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });*/
+
+                                HashMap map = new HashMap();
+                                map.put("customerRideId", customerId);
+                                driverRef.updateChildren(map);
+
+                                //Changes the text on the screen to say the driver was found then calls the location to get the drivers location
+                                getDriverLocation();
+
+                                //uses the database reference to get the drivers information and save it the the given text views
+                                driverRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        //If data exists and there is more than one child in the section of the database i'm referencing
+                                        if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+
+                                            //Create a map that stores all the data
+                                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                                            if(map.get("Name") != null){
+                                                String driverName = map.get("Name").toString();
+                                                driverNameView.setText(driverName);
+                                            }
+
+                                            if(map.get("Car Make") != null){
+                                                String driverCar = map.get("Car Make").toString();
+                                                driverCarMake.setText(driverCar);
+                                            }
+
+                                            if(map.get("License Plate") != null){
+                                                String driverPlate = map.get("License Plate").toString();
+                                                driverLicensePlate.setText(driverPlate);
+                                            }
+
+                                            if(map.get("profileImageUrl") != null){
+                                                driverImageUrl = map.get("profileImageUrl").toString();
+                                                Glide.with(getApplication()).load(driverImageUrl).into(driverImageView);
+                                            }
+
+                                            if(map.get("Rating") != null){
+                                                float driverCurrentRating = parseFloat(map.get("Rating").toString());
+                                                driverRatingView.setRating(driverCurrentRating);
+                                            }
+                                        }
+                                    }
+
+                                    //Useless function needed so no errors arise
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                customerData.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        //If data exists and there is more than one child in the section of the database i'm referencing
+                                        if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                                            //Create a map that stores all the data
+                                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                                            //If the key has a null value the 'if' is skipped
+                                            //If it has a value then we convert the value to a string and set it to the required TextView
+                                            if (map.get("First Name") != null && map.get("Last Name") != null) {
+                                                String firstName = map.get("First Name").toString();
+                                                String lastName = map.get("Last Name").toString();
+                                                String fullName = firstName + " " + lastName;
+                                                nameView.setText(fullName);
+                                            }
+
+                                            if(map.get("profileImageUrl") != null){
+                                                passengerImageUrl = map.get("profileImageUrl").toString();
+                                                Glide.with(getApplication()).load(passengerImageUrl).into(passengerImageView);
+                                            }
+
+                                            if(map.get("Rating") != null){
+                                                float driverCurrentRating = parseFloat(map.get("Rating").toString());
+                                                passengerRatingView.setRating(driverCurrentRating);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                searchingText.setVisibility(View.GONE);
+
+                                preMatchInfo.setVisibility(View.VISIBLE);
+                                driverInfo.setVisibility(View.VISIBLE);
+                                passengerInfo.setVisibility(View.VISIBLE);
+                                matchTitle.setVisibility(View.VISIBLE);
+                                acceptMatch.setVisibility(View.VISIBLE);
+                                declineMatch.setVisibility(View.VISIBLE);
+
+                                distanceTitleView.setVisibility(View.VISIBLE);
+                                distanceAmountView.setVisibility(View.VISIBLE);
                             }
                         }
 
-                        //Useless function needed so no errors arise
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     });
                 }
@@ -446,15 +532,14 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private void getDriverLocation() {
 
         //Gets reference to the database where the active drivers location is stored
-        //REMEMBER TO CHANGE THIS WHEN MOH UPDATES DATABASE
-        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driverAvailable").child(foundDriverID).child("l");
+        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driverWorking").child(foundDriverID).child("l");
 
         //Starts an event listener that is called each time the drivers location is changed
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             //Runs every time the drivers location changes
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if(dataSnapshot.exists() && requestMade){
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double lat = 0;
                     double lng = 1;
@@ -649,35 +734,203 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         myRef.child("Searching").setValue("Yes");
     }
 
-    //Hides the searching information and displays the match found information
-    public void matchFoundPrompt(View view){
-        searchingText.setVisibility(View.GONE);
-
-        preMatchInfo.setVisibility(View.VISIBLE);
-        driverInfo.setVisibility(View.VISIBLE);
-        passengerInfo.setVisibility(View.VISIBLE);
-        matchTitle.setVisibility(View.VISIBLE);
-        acceptMatch.setVisibility(View.VISIBLE);
-        declineMatch.setVisibility(View.VISIBLE);
-
-        distanceTitleView.setVisibility(View.VISIBLE);
-        distanceAmountView.setVisibility(View.VISIBLE);
-
-    }
-
+    //Puts the decline prompt on the screen
     public void declineMatchPrompt(View view){
         declinePromptView.setVisibility(View.VISIBLE);
     }
 
+    //Removes the decline prompt on the screen
     private void removeDeclinePrompt(View view) {
         declinePromptView.setVisibility(View.GONE);
     }
 
+    //Puts the accept prompt on the screen
     public void acceptMatchPrompt(View view){
         acceptPromptView.setVisibility(View.VISIBLE);
     }
 
+    //Removes the accept prompt on the screen
     private void removeAcceptPrompt(View view) {
         acceptPromptView.setVisibility(View.GONE);
+    }
+
+    //Swaps from accept ride information to during ride information
+    //Also gets the information from the database and displays it on the screen using database listeners
+    private void swapToRide(View v) {
+        acceptPromptView.setVisibility(View.GONE);
+
+        preMatchInfo.setVisibility(View.GONE);
+        driverInfo.setVisibility(View.GONE);
+        passengerInfo.setVisibility(View.GONE);
+        matchTitle.setVisibility(View.GONE);
+        acceptMatch.setVisibility(View.GONE);
+        declineMatch.setVisibility(View.GONE);
+
+        distanceTitleView.setVisibility(View.GONE);
+        distanceAmountView.setVisibility(View.GONE);
+
+        findViewById(R.id.passengerInfoViewExtended).setVisibility(View.VISIBLE);
+        findViewById(R.id.driverInfoViewExtended).setVisibility(View.VISIBLE);
+
+        driverRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //If data exists and there is more than one child in the section of the database i'm referencing
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+
+                    //Create a map that stores all the data
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    if(map.get("Name") != null){
+                        String driverName = map.get("Name").toString();
+                        driverNameViewExtended.setText(driverName);
+                    }
+
+                    if(map.get("Car Make") != null){
+                        String driverCar = map.get("Car Make").toString();
+                        driverCarMakeExtended.setText(driverCar);
+                    }
+
+                    if(map.get("License Plate") != null){
+                        String driverPlate = map.get("License Plate").toString();
+                        driverLicensePlateExtended.setText(driverPlate);
+                    }
+
+                    if(map.get("profileImageUrl") != null){
+                        driverImageUrl = map.get("profileImageUrl").toString();
+                        Glide.with(getApplication()).load(driverImageUrl).into(driverImageViewExtended);
+                    }
+
+                    if(map.get("Rating") != null){
+                        float driverCurrentRating = parseFloat(map.get("Rating").toString());
+                        driverRatingViewExtended.setRating(driverCurrentRating);
+                    }
+                }
+
+
+            }
+
+            //Useless function needed so no errors arise
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        String customerId = mAuth.getCurrentUser().getUid();
+        DatabaseReference customerData = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(customerId);
+
+        customerData.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //If data exists and there is more than one child in the section of the database i'm referencing
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                    //Create a map that stores all the data
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    //If the key has a null value the 'if' is skipped
+                    //If it has a value then we convert the value to a string and set it to the required TextView
+                    if (map.get("First Name") != null && map.get("Last Name") != null) {
+                        String firstName = map.get("First Name").toString();
+                        String lastName = map.get("Last Name").toString();
+                        String fullName = firstName + " " + lastName;
+                        nameViewExtended.setText(fullName);
+                    }
+
+                    if (map.get("profileImageUrl") != null) {
+                        passengerImageUrl = map.get("profileImageUrl").toString();
+                        Glide.with(getApplication()).load(passengerImageUrl).into(passengerImageViewExtended);
+                    }
+
+                    if (map.get("Rating") != null) {
+                        float driverCurrentRating = parseFloat(map.get("Rating").toString());
+                        passengerRatingViewExtended.setRating(driverCurrentRating);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //Function called when the ride has ended
+    private void endRide(View v) {
+
+        requestMade = false;
+
+        //removes the listeners for the drivers location and for the driver database
+        driverQuery.removeAllListeners();
+        driverLocationRef.removeEventListener(driverLocationRefListener);
+
+        //Sets the customers id in the driver database to null and sets the found driver to null
+        if(foundDriverID != null){
+            driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
+            driverRef.child("customerRideId").setValue(null);
+            foundDriverID = null;
+        }
+
+        //reset variables to their initial values
+        driverFound = false;
+        radius = 1;
+
+        //remove the pickup location for the user from the database
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+        GeoFire geoFireRequest = new GeoFire(requestRef);
+        geoFireRequest.removeLocation(userId);
+
+        myRef.child("Searching").setValue("No");
+
+        //Remove the pickup marker and the driver marker from the screen
+        if(pickupMarker != null){
+            pickupMarker.remove();
+        }
+
+        if(driverLocationMarker != null){
+            driverLocationMarker.remove();
+        }
+
+        //Call function that hides screen elements and resets the screen to pre match mode
+        removePrompt(v);
+    }
+
+    //Function called when the app closes
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        requestMade = false;
+
+        //Sets the customers id in the driver database to null and sets the found driver to null
+        if(foundDriverID != null){
+            driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
+            driverRef.child("customerRideId").setValue(null);
+            foundDriverID = null;
+        }
+
+        //reset variables to their initial values
+        driverFound = false;
+        radius = 1;
+
+        //remove the pickup location for the user from the database
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference("CustomerPickupLocation");
+        GeoFire geoFireRequest = new GeoFire(requestRef);
+        geoFireRequest.removeLocation(userId);
+
+        myRef.child("Searching").setValue("No");
+
+        //Remove the pickup marker and the driver marker from the screen
+        if(pickupMarker != null){
+            pickupMarker.remove();
+        }
+
+        if(driverLocationMarker != null){
+            driverLocationMarker.remove();
+        }
+
     }
 }

@@ -53,7 +53,7 @@
         android:visibility="visible"/>
 
     <EditText
-        android:id="@+id/enterDestination"
+        android:id="@+id/temp"
         android:layout_width="278dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
@@ -62,6 +62,18 @@
         android:inputType="textPostalAddress"
         android:gravity="center_horizontal"
         android:visibility="visible"/>
+
+    <fragment android:id="@+id/enterDestination"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:ems="10"
+        android:inputType="textPostalAddress"
+        android:gravity="center_horizontal"
+        android:visibility="visible"
+         />
 
     <Button
         android:id="@+id/findMatch"
@@ -669,7 +681,8 @@
         android:layout_height="205dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="bottom|right">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -696,7 +709,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="33dp"
-                app:srcCompat="@drawable/usersmall"
+                android:src="@drawable/usersmall"
                 android:scaleType="fitXY"/>
 
             <ImageView
@@ -707,7 +720,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="28dp"
-                app:srcCompat="@drawable/usersmall"
+                android:src="@drawable/usersmall"
                 android:scaleType="fitXY"/>
 
             <ImageView
@@ -718,7 +731,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="28dp"
-                app:srcCompat="@drawable/usersmall"
+                android:src="@drawable/usersmall"
                 android:scaleType="fitXY"/>
 
             <TextView
@@ -806,7 +819,8 @@
         android:layout_alignTop="@+id/passengerInfoViewExtended"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_gravity="bottom|left">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -834,7 +848,7 @@
                 android:layout_marginStart="52dp"
                 android:layout_marginTop="29dp"
                 android:layout_marginEnd="53dp"
-                app:srcCompat="@drawable/usersmall"
+                android:src="@drawable/usersmall"
                 android:scaleType="fitXY"/>
 
             <TextView
