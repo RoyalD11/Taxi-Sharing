@@ -140,7 +140,7 @@
             android:background="?android:attr/listDivider"
             android:visibility="invisible" />
 
-        <Button
+       <!-- <Button
             android:id="@+id/button4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,12 +149,12 @@
             android:textColor="@android:color/white" />
 
         <Button
-            android:id="@+id/logout"
+            android:id="@+id/back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="logout"
-            android:text="Logout" />
-
+            android:text="Back" />
+        -->
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -72,7 +72,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".driverProfile" />
+        <activity
+            android:name=".driverProfile"
+            android:parentActivityName=".MapsActivity"/>
     </application>
 
 </manifest>

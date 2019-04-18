@@ -5,56 +5,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/profilesmall"
-        android:background="@android:drawable/screen_background_light_transparent"
-        android:onClick="driverProfile"
-        />
+        android:layout_height="match_parent" />
 
     <LinearLayout
+        android:layout_width="333dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="57dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:text="LOGOUT" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@android:drawable/screen_background_light_transparent"
+            android:onClick="driverProfile"
+            android:src="@drawable/profilesmall" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/customerInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/customerInfo"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
         android:background="@android:color/white"
+        android:orientation="horizontal"
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/customerProfilePic"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:id="@+id/customerProfilePic"
-            android:src="@mipmap/ic_launcher"
-            android:padding="20sp"/>
+            android:padding="20sp"
+            android:src="@mipmap/ic_launcher" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="40sp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/customerName"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/customerPhone"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp"/>
 
+            <TextView
+                android:id="@+id/customerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20sp"
+                android:paddingBottom="10sp" />
+
+            <TextView
+                android:id="@+id/customerPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20sp"
+                android:paddingBottom="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!--<Switch
+                android:id="@+id/customerPickedUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:="40sp"/>
+-->
         </LinearLayout>
     </LinearLayout>
+
 
 </FrameLayout>
 

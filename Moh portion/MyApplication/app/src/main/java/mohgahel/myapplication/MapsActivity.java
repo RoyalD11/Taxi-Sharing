@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FusedLocationProviderClient fusedLocationClient;
     private List<Polyline> polylines;
-
+    private Button logout;
     private String customerID = "", destination;
     private LatLng destLatLng, pickupLatLng;
     private float rideDistance;
@@ -106,6 +106,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         customerProfilePic = (ImageView) findViewById(R.id.customerProfilePic);
         customerName = (TextView) findViewById(R.id.customerName);
         customerPhone = (TextView) findViewById(R.id.customerPhone);
+        logout = (Button) findViewById(R.id.logout);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MapsActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Logging out")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                disconnectDriver();
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                                return; }
+                                })
+                        .setNegativeButton("No", null)
+                        .show();
+
+/*
+                disconnectDriver();
+
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return;*/
+            }
+        });
 
         getAssignedClient();
     }
@@ -188,13 +221,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //determine the customer's destination
     private void getAssignedClientDestination() {
-        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedClientRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
+        //String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedClientRef = FirebaseDatabase.getInstance().getReference().child("CustomerDropOffLocation").child(customerID).child("l");//.child("Users").child("Drivers").child(driverID);
         assignedClientRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    Map<String, Object> mapKey = (Map<String, Object>) dataSnapshot.getValue();
+                    /*Map<String, Object> mapKey = (Map<String, Object>) dataSnapshot.getValue();
                     if(mapKey.get("destination") != null) {
                         destination = mapKey.get("destination").toString();
                     }
@@ -211,7 +244,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         destLng = Double.valueOf(mapKey.get("destLng").toString());
                         destLatLng = new LatLng(destLat, destLng);
 
+                    }*/
+
+                    List<Object> mapList = (List<Object>) dataSnapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    if(mapList.get(0) != null) {
+                        locationLat = Double.parseDouble(mapList.get(0).toString());
                     }
+                    if(mapList.get(1) != null) {
+                        locationLng = Double.parseDouble(mapList.get(1).toString());
+                    }
+                    pickupLatLng = new LatLng(locationLat,locationLng);//set coordinates for dropoff
+                    //set map marker on coordinates
+                    pickupMarker = map.addMarker(new MarkerOptions().position(pickupLatLng).title("Customer Drop-Off Location"));//icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                    //getRouteToMarker(pickupLatLng);
+
                 }
 
             }
@@ -346,8 +394,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    //map.animateCamera(CameraUpdateFactory.zoomTo(16));
+                    map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    map.animateCamera(CameraUpdateFactory.zoomTo(12));
 
                     //String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     DatabaseReference availability = FirebaseDatabase.getInstance().getReference("driverAvailable");
