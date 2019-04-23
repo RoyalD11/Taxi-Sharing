@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.support.v4.content.ContextCompat;
 import android.widget.Button;
@@ -83,9 +84,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int status = 0;
     String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-    private LinearLayout customerInfo;
-    private ImageView customerProfilePic;
-    private TextView customerName, customerPhone;
+    private CardView customerInfo;
+    private ImageView customerProfilePic, driverProfilePic;
+    private TextView customerName, customerPhone, customerDestination, customerFee;
 
 
     private SupportMapFragment mapFragment;
@@ -102,10 +103,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        customerInfo = (LinearLayout) findViewById(R.id.customerInfo);
+        customerInfo = (CardView) findViewById(R.id.customerInfo);
         customerProfilePic = (ImageView) findViewById(R.id.customerProfilePic);
         customerName = (TextView) findViewById(R.id.customerName);
         customerPhone = (TextView) findViewById(R.id.customerPhone);
+        customerDestination = (TextView) findViewById(R.id.customerDestination);
+        customerFee = (TextView) findViewById(R.id.customerFee);
+        driverProfilePic = (ImageView) findViewById(R.id.driverProfilePic);
         logout = (Button) findViewById(R.id.logout);
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -139,8 +143,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;*/
             }
         });
+        DatabaseReference customerCost = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
+        customerCost.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("profileImageUrl") != null) {
+                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(driverProfilePic);
+                    }
 
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         getAssignedClient();
+        getRideCost();
     }
 
 
@@ -157,8 +179,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     getAssignedClientPickUpLocation();//determine location
                     getAssignedClientDestination();//determine destination
                     getAssignedClientInfo();//determine information
+                    getRideCost();
                 }else {
-
                     endRide();
                 }
             }
@@ -171,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    Marker pickupMarker;
+    Marker pickupMarker, dropOffMarker;
     private DatabaseReference assignedCustomerPickupLocationRef;
     private ValueEventListener assignedCustomerPickupLocationRefListener;
 
@@ -257,7 +279,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     pickupLatLng = new LatLng(locationLat,locationLng);//set coordinates for dropoff
                     //set map marker on coordinates
-                    pickupMarker = map.addMarker(new MarkerOptions().position(pickupLatLng).title("Customer Drop-Off Location"));//icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                    dropOffMarker = map.addMarker(new MarkerOptions().position(pickupLatLng).title("Customer Drop-Off Location"));//icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
                     //getRouteToMarker(pickupLatLng);
 
                 }
@@ -288,6 +310,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if(map.get("profileImageUrl") != null) {
                         Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(customerProfilePic);
                     }
+                    if(map.get("Destination") != null) {
+                        customerDestination.setText(map.get("Destination").toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void getRideCost() {
+        DatabaseReference customerCost = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
+        customerCost.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("amountToBePaid") != null) {
+                        customerFee.setText(map.get("amountToBePaid").toString());
+                    }
+
                 }
             }
 
@@ -298,11 +346,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+
     public void endRide() {
 
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
+        String driverID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID).child("customerRequest");
         driverRef.removeValue();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerPickupLocation");
@@ -313,6 +361,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(pickupMarker != null){
             pickupMarker.remove();
+            dropOffMarker.remove();
         }
 
         if (assignedCustomerPickupLocationRefListener != null){
@@ -321,6 +370,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         customerInfo.setVisibility(View.GONE);
         customerName.setText("");
         customerPhone.setText("");
+        customerDestination.setText("");
+        customerFee.setText("");
         //customerDestination.setText("Destination: --");
         //customerProfilePic.setImageResource(R.mipmap.ic_default_user);
 
@@ -343,6 +394,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 checkLocationPermission();
             }
         }
+
         /*
         LatLng ottAirport = new LatLng(45.32, -75.66);
         mMap.addMarker(new MarkerOptions().position(ottAirport).title("Ottawa International Airport"));

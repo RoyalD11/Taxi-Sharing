@@ -109,21 +109,18 @@ public class SignUpActivity extends AppCompatActivity {
                             else{
                                 driverID = auth.getCurrentUser().getUid();
                                 DatabaseReference DriverDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverID);
-
-                                Map drivers = new HashMap();
-
                                 driverName = firstName.getText().toString();
                                 driverPhone = phone.getText().toString();
                                 driverCar = car.getText().toString();
                                 driverPlate = plate.getText().toString();
 
+                                Map drivers = new HashMap();
                                 drivers.put("Name", driverName);
                                 drivers.put("Email", driverEmail);
                                 drivers.put("Phone Number", driverPhone);
                                 drivers.put("Car Make", driverCar);
                                 drivers.put("License Plate", driverPlate);
                                 drivers.put("Rating", 0.0f);
-
                                 DriverDb.setValue(drivers);
 
                                 if(resultUri != null){

@@ -23,18 +23,18 @@
             android:layout_weight="0.1"
             android:text="LOGOUT" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/driverProfilePic"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:background="@android:drawable/screen_background_light_transparent"
             android:onClick="driverProfile"
+            android:scaleType="fitXY"
             android:src="@drawable/profilesmall" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/customerInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,6 +42,60 @@
         android:background="@android:color/white"
         android:orientation="horizontal"
         android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/customerProfilePic"
+            android:layout_width="120sp"
+            android:layout_height="120sp"
+            android:padding="20sp"
+            android:src="@mipmap/ic_launcher" />
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="40sp">
+
+        <TextView
+            android:id="@+id/customerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="130sp"
+            android:paddingTop="25sp"
+            android:paddingBottom="10sp" />
+
+        <TextView
+            android:id="@+id/customerPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="130sp"
+            android:paddingTop="50sp"
+            android:paddingBottom="10sp" />
+
+        <TextView
+            android:id="@+id/customerDestination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="130sp"
+            android:paddingTop="75sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/customerFee"
+            android:paddingLeft="220sp"
+            android:paddingTop="25sp"/>
+
+            <!--<Switch
+                android:id="@+id/customerPickedUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:="40sp"/>
+
+                <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
 
         <ImageView
             android:id="@+id/customerProfilePic"
@@ -74,15 +128,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <!--<Switch
-                android:id="@+id/customerPickedUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:="40sp"/>
+
 -->
-        </LinearLayout>
-    </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
 
 
 </FrameLayout>

@@ -12,11 +12,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class driverProfile extends AppCompatActivity {
-    //private Button back, logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_profile);
+    }
+}
         /*
         back = (Button) findViewById(R.id.back);
 
@@ -29,7 +30,7 @@ public class driverProfile extends AppCompatActivity {
             }
         });*/
 
-    }
+
 
     /*
     public void logout(View view) {
@@ -47,7 +48,3 @@ public class driverProfile extends AppCompatActivity {
         startActivity(intent);
     }*/
 
-
-
-
-}
