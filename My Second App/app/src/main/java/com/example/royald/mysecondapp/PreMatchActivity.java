@@ -529,7 +529,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                                 distanceTitleView.setVisibility(View.VISIBLE);
                                 distanceAmountView.setVisibility(View.VISIBLE);
 
-                                amount = 10.0 + Math.random() * (20.0 - 10.0);
+                                amount = 10.0 + Math.random() * (20.0 - 10.0); //Formula that does not work exactly amount = (2.5+totaldistance*1.56) / numberOfPassengers, this should be the exact cost
+
                                 cost.setText("$" + df2.format(amount));
 
                                 HashMap costMap = new HashMap();

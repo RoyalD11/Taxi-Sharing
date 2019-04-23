@@ -20,37 +20,37 @@
         android:layout_width="83dp"
         android:layout_height="71dp"
         android:background="@android:drawable/screen_background_light_transparent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/usersmall"
         android:onClick="toUserProfile"
+        android:scaleType="fitXY"
+        android:src="@drawable/usersmall"
         android:visibility="visible"
-        android:scaleType="fitXY" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/profileText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="70dp"
         android:layout_marginLeft="18dp"
+        android:layout_marginTop="70dp"
         android:text="Profile"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/destinationText"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="140dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="48dp"
+        android:layout_marginBottom="140dp"
         android:text="Enter Destination"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
     <EditText
         android:id="@+id/enterDestination"
@@ -59,21 +59,21 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="100dp"
         android:ems="10"
-        android:inputType="textPostalAddress"
         android:gravity="center_horizontal"
-        android:visibility="visible"/>
+        android:inputType="textPostalAddress"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/findMatch"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Find Match"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="25dp"
         android:background="@color/colorPrimary"
+        android:onClick="displayPrompt"
+        android:text="Find Match"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
-        android:visibility="visible"
-        android:onClick="displayPrompt"/>
+        android:visibility="visible" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/findMatchPromptView"
@@ -227,11 +227,11 @@
         android:id="@+id/passengerInfoView"
         android:layout_width="180dp"
         android:layout_height="158dp"
+        android:layout_gravity="bottom|right"
         android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
-        android:layout_gravity="bottom|right">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -262,8 +262,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="33dp"
-                    android:src="@drawable/usersmall"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:src="@drawable/usersmall" />
 
                 <ImageView
                     android:id="@+id/passPic2"
@@ -273,8 +273,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="9dp"
-                    android:src="@drawable/usersmall"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:src="@drawable/usersmall" />
 
                 <ImageView
                     android:id="@+id/passPic3"
@@ -284,8 +284,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/usersmall"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:src="@drawable/usersmall" />
 
                 <TextView
                     android:id="@+id/namePass1"
@@ -306,9 +306,9 @@
                     android:layout_marginEnd="17dp"
                     android:layout_marginBottom="0dp"
                     android:layout_toEndOf="@+id/passPic1"
+                    android:isIndicator="true"
                     android:numStars="5"
-                    android:rating="2.5"
-                    android:isIndicator="true"/>
+                    android:rating="2.5" />
 
                 <TextView
                     android:id="@+id/namePass2"
@@ -332,9 +332,9 @@
                     android:layout_marginEnd="17dp"
                     android:layout_marginBottom="0dp"
                     android:layout_toEndOf="@+id/passPic1"
+                    android:isIndicator="true"
                     android:numStars="5"
-                    android:rating="2.5"
-                    android:isIndicator="true"/>
+                    android:rating="2.5" />
 
                 <TextView
                     android:id="@+id/namePass3"
@@ -352,9 +352,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignStart="@+id/ratingPass1"
                     android:layout_alignParentBottom="true"
+                    android:isIndicator="true"
                     android:numStars="5"
-                    android:rating="2.5"
-                    android:isIndicator="true"/>
+                    android:rating="2.5" />
             </RelativeLayout>
         </ScrollView>
 
@@ -940,7 +940,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="-1dp"
                 android:layout_toEndOf="@+id/costTitle"
-                android:text="cost...."
+                android:text="Cost......."
                 android:textSize="18sp" />
 
             <Button
