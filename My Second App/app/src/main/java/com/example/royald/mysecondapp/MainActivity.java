@@ -23,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.example.royald.mysecondapp.MESSAGE";
 
+    //Databse variables used for authentication
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+    //Variable for login button
     Button loginButton;
 
     @Override
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Get the instance of the authenticator in the databse
         mAuth = FirebaseAuth.getInstance();
         //mAuth.signOut(); //Used to force sign the user out if there is ever an error in the code, so the app will default to the sign in screen.
 
@@ -50,15 +53,19 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //Reference the login button on the screen
         loginButton = (Button) findViewById(R.id.LoginButton);
 
         //Waits for the login button to be pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Reference the necessary fields
                 EditText email = (EditText) findViewById(R.id.EmailBox);
                 EditText password = (EditText) findViewById(R.id.PasswordBox);
 
+                //Get the information of those fields
                 final String userEmail = email.getText().toString();
                 final String userPassword = password.getText().toString();
 

@@ -117,6 +117,7 @@ public class signUpScreen extends AppCompatActivity {
         q2Spinner.setAdapter(q2Adapter);
         q3Spinner.setAdapter(q3Adapter);
 
+        //onclick listener for the profile image to open the gallery
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,9 +127,10 @@ public class signUpScreen extends AppCompatActivity {
             }
         });
 
-
+        //reference the button on the screen
         createAccount = (Button) findViewById(R.id.createAccountButton);
 
+        //On click listener for the create account button
         createAccount.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -257,6 +259,8 @@ public class signUpScreen extends AppCompatActivity {
                                 //Adds the map to the user based off their user ID
                                 myDatabase.setValue(userData);
 
+                                //If statement to set the users profile image to the databse, will only trigger if a picture was chosen
+                                //Converts the image to a bitmap for less data storage
                                 if(resultUri != null){
                                     final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
                                     Bitmap bitmap = null;
@@ -268,11 +272,13 @@ public class signUpScreen extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
+                                    //Compresses the image for better data usage when sent to databse
                                     ByteArrayOutputStream boas = new ByteArrayOutputStream();
                                     bitmap.compress(Bitmap.CompressFormat.JPEG, 20, boas);
                                     byte[] data = boas.toByteArray();
                                     UploadTask uploadTask = filePath.putBytes(data);
 
+                                    //Uploads the image to the database
                                     Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                         @Override
                                         public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -324,6 +330,7 @@ public class signUpScreen extends AppCompatActivity {
         return false;
     }
 
+    //Used to get the image uri based on the data of the image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

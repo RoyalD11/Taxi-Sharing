@@ -116,6 +116,7 @@ public class EditProfile extends AppCompatActivity {
         //Gets the current user's information and displays it in the required fields.
         getUserInfo();
 
+        //Listener for the profile image, opens the users gallery so they can choose a picture
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,6 +196,8 @@ public class EditProfile extends AppCompatActivity {
                     myRef.child("Match Q2").setValue(mQ2);
                     myRef.child("Match Q3").setValue(mQ3);
 
+                    //If statement to set the users profile image to the databse, will only trigger if a picture was chosen
+                    //Converts the image to a bitmap for less data storage
                     if(resultUri != null){
                         final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userId);
                         Bitmap bitmap = null;
@@ -206,11 +209,13 @@ public class EditProfile extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                        //Compresses the image for better data usage when sent to databse
                         ByteArrayOutputStream boas = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 20, boas);
                         byte[] data = boas.toByteArray();
                         UploadTask uploadTask = filePath.putBytes(data);
 
+                        //Uploads the image to the database
                         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -324,6 +329,7 @@ public class EditProfile extends AppCompatActivity {
         });
     }
 
+    //Used to get the image uri based on the data of the image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -346,6 +352,7 @@ public class EditProfile extends AppCompatActivity {
         return false;
     }
 
+    //Returns the the user profile screen
     public void toUserProfile(View view){
         Intent intent = new Intent(this, UserProfile.class);
         startActivity(intent);

@@ -22,13 +22,16 @@ import java.util.Map;
 
 public class UserProfile extends AppCompatActivity {
 
+    //database vaiables needed for this class
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
     private String userId;
 
+    //User fields
     private TextView nameView, emailView, ageView, genderView, phoneView, mQ1View, mQ2View, mQ3View;
     private RatingBar ratingBar;
 
+    //User input to be added to database
     private String firstName;
     private String lastName;
     private String fullName;
@@ -45,6 +48,7 @@ public class UserProfile extends AppCompatActivity {
 
     private float rating;
 
+    //Flag to confirm log out
     boolean loggingOut = false;
 
     @Override
@@ -52,6 +56,7 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        //get reference to all fields
         nameView = (TextView) findViewById(R.id.nameText);
         emailView = (TextView) findViewById(R.id.emailText);
         ageView = (TextView) findViewById(R.id.ageText);
@@ -64,12 +69,15 @@ public class UserProfile extends AppCompatActivity {
 
         profileImage = (ImageView) findViewById(R.id.profileImageView);
 
+        //get reference to the databse
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
         myRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(userId);
 
+        //make the rating bar not modifiable
         ratingBar.setFocusable(false);
 
+        //call to get user info, which retrieves all user info and displays it
         getUserInfo();
     }
 

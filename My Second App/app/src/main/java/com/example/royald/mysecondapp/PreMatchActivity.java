@@ -92,7 +92,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private String userId;
     private String imageUrl;
 
-    //Vars for initial screen elements to be referenced later
+    //Vars for initial screen elements
     private ImageView profileButton;
     private Button findMatchPrompt;
     private TextView searchingText;
@@ -117,17 +117,19 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     private String passengerImageUrl;
     //ArrayList<String> customersSharingRide = new ArrayList<String>(); Was to be used to show multiple passengers, never worked
 
+    //Boolean flags for error prevention
     private boolean requestMade = false;
     private boolean notShownYet = true;
 
+    //Vars for calculations made
     private TextView cost, costAmount;
-
     float distanceFromDest;
-
     double amount;
 
+    //Format used for printing
     DecimalFormat df2 = new DecimalFormat("#.##");
 
+    //Referenced element from final prompt
     private Button finishRide;
 
     //Runs once the activity is opened on the device
@@ -294,6 +296,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                     GeoFire geoFireRequest = new GeoFire(requestRef);
                     geoFireRequest.setLocation(user_id, new GeoLocation(pickup.getLatitude(), pickup.getLongitude()));
 
+                    //Saves the dropoff location to the databse
                     DatabaseReference requestRefDrop = FirebaseDatabase.getInstance().getReference("CustomerDropOffLocation");
                     GeoFire geoFireRequestDrop = new GeoFire(requestRefDrop);
                     geoFireRequestDrop.setLocation(user_id, new GeoLocation(dropoff.getLatitude(), dropoff.getLongitude()));
@@ -343,7 +346,6 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         declineYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 endRide(v);
             }
         });
@@ -356,6 +358,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        //On click listener for the finish ride button, handles ending the ride
         finishRide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -387,29 +390,36 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             public void onKeyEntered(String key, GeoLocation location) {
                 if(!driverFound && requestMade) {
 
+                    //Get reference to the driver database
                     DatabaseReference customerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(key);
                     customerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+
+                                //Return if a driver was already found
                                 if(driverFound){
                                     return;
                                 }
 
+                                //Get reference to the current driver based on the one found
                                 driverFound = true;
                                 foundDriverID = dataSnapshot.getKey();
 
-                                //Give the driver found the Id of the customer who found them. Figure out how to append this id to an array so multiple can find the same driver
-                                //LOOK HERE
+                                //update reference to the exact driver
                                 driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(foundDriverID);
                                 String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+                                //Get reference to the current customer database
                                 DatabaseReference customerData = FirebaseDatabase.getInstance().getReference().child("Users").child("Passengers").child(customerId);
 
+
+
+                                /* ****************************************************************************************************************** */
                                 //This chunk of code should add multiple user ids to the driver customer field, does not work.
                                 /*customersSharingRide.add(customerId);
-
+                                //Give the driver found the Id of the customer who found them. Figure out how to append this id to an array so multiple can find the same driver
                                 customersSearchingData.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -430,7 +440,10 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
 
                                     }
                                 });*/
+                                /* ********************************************************************************************************************** */
 
+
+                                //Create a has map to store the customer ID to the driver found
                                 HashMap map = new HashMap();
                                 map.put("customerRideId", customerId);
                                 driverRef.updateChildren(map);
@@ -484,6 +497,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                                 customerData.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                                         //If data exists and there is more than one child in the section of the database i'm referencing
                                         if(dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
@@ -491,7 +505,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                                             Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 
                                             //If the key has a null value the 'if' is skipped
-                                            //If it has a value then we convert the value to a string and set it to the required TextView
+                                            //If it has a value then we convert the value to a string and set it to the required view
                                             if (map.get("First Name") != null && map.get("Last Name") != null) {
                                                 String firstName = map.get("First Name").toString();
                                                 String lastName = map.get("Last Name").toString();
@@ -517,6 +531,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                                     }
                                 });
 
+                                //Set specific screen elements to visible or gone depending on whats needed
+                                //This set of elements is the match found screen set to visible
                                 searchingText.setVisibility(View.GONE);
 
                                 preMatchInfo.setVisibility(View.VISIBLE);
@@ -529,10 +545,15 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                                 distanceTitleView.setVisibility(View.VISIBLE);
                                 distanceAmountView.setVisibility(View.VISIBLE);
 
-                                amount = 10.0 + Math.random() * (20.0 - 10.0); //Formula that does not work exactly amount = (2.5+totaldistance*1.56) / numberOfPassengers, this should be the exact cost
+                                //Formula used a a place holder, does not represent an actual cost
+                                amount = 10.0 + Math.random() * (20.0 - 10.0);
 
+                                //Formula that does not work exactly amount = (2.5+totaldistance*1.56) / numberOfPassengers, this should be the exact cost
+
+                                //set the cost t the screen
                                 cost.setText("$" + df2.format(amount));
 
+                                //Set the cost to the driver database
                                 HashMap costMap = new HashMap();
                                 costMap.put("amountToBePaid", df2.format(amount));
                                 driverRef.updateChildren(costMap);
@@ -608,10 +629,12 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                     userLocation.setLatitude(pickupLocation.latitude);
                     userLocation.setLongitude(pickupLocation.longitude);
 
+                    //Set the location variable for the drop off
                     Location endLocation = new Location("");
                     endLocation.setLatitude(dropoffLocation.latitude);
                     endLocation.setLongitude(dropoffLocation.longitude);
 
+                    //Set the drivers location for the marker
                     Location driverCurrentLocation = new Location("");
                     driverCurrentLocation.setLatitude(driverLatLng.latitude);
                     driverCurrentLocation.setLongitude(driverLatLng.longitude);
@@ -620,8 +643,10 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                     float distance = userLocation.distanceTo(driverCurrentLocation);
                     float distanceKm = distance/1000;
 
+                    //Calculate the distance from the driver to the destination
                     distanceFromDest = endLocation.distanceTo(driverCurrentLocation);
 
+                    //If condition to check if the driver is arriving at your pick up location or not
                     if(distance < 100){
                         distanceAmountView.setText("Driver Arriving");
                     }
@@ -629,6 +654,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
                         distanceAmountView.setText(String.valueOf(String.format("%.1f", distanceKm)) + "Km");
                     }
 
+                    //If condition to check if the driver is arriving at your destination or not
+                    //Sets the view to end ride prompt if arrived
                     if(distanceFromDest < 100 && notShownYet){
                         notShownYet = false;
 
@@ -749,6 +776,7 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     public void displayPrompt(View view) {
         EditText destination = (EditText) findViewById(R.id.enterDestination);
 
+        //If nothing is entered in the desitnation it throws an error and requires input
         if (TextUtils.isEmpty(destination.getText()))
             destination.setError("Destination is required!");
         else {
@@ -922,8 +950,8 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
     //Function called when the ride has ended
     private void endRide(View v) {
 
+        //Set the boolean
         requestMade = false;
-
 
         //removes the listeners for the drivers location and for the driver database
         driverQuery.removeAllListeners();
@@ -947,13 +975,15 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         GeoFire geoFireRequest = new GeoFire(requestRef);
         geoFireRequest.removeLocation(userId);
 
+        //remove the drop off location from the database
         DatabaseReference requestRefDrop = FirebaseDatabase.getInstance().getReference("CustomerDropOffLocation");
         GeoFire geoFireRequestDrop = new GeoFire(requestRefDrop);
         geoFireRequestDrop.removeLocation(userId);
 
+        //set searching to no
         myRef.child("Searching").setValue("No");
 
-        //Remove the pickup marker and the driver marker from the screen
+        //Remove the markers and the driver marker from the screen
         if(pickupMarker != null){
             pickupMarker.remove();
         }
@@ -966,7 +996,9 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
             driverLocationMarker.remove();
         }
 
+        //reset the flag
         notShownYet = true;
+
         //Call function that hides screen elements and resets the screen to pre match mode
         removePrompt(v);
 
@@ -999,17 +1031,20 @@ public class PreMatchActivity extends FragmentActivity implements OnMapReadyCall
         GeoFire geoFireRequest = new GeoFire(requestRef);
         geoFireRequest.removeLocation(userId);
 
+        //remove the drop off location from the database
         DatabaseReference requestRefDrop = FirebaseDatabase.getInstance().getReference("CustomerDropOffLocation");
         GeoFire geoFireRequestDrop = new GeoFire(requestRefDrop);
         geoFireRequestDrop.removeLocation(userId);
 
+        //remove the customer location from the database
         DatabaseReference currentRef = FirebaseDatabase.getInstance().getReference("CustomerLocation");
         GeoFire geoFireCurrent = new GeoFire(currentRef);
         geoFireCurrent.removeLocation(userId);
 
+        //set searching to no
         myRef.child("Searching").setValue("No");
 
-        //Remove the pickup marker and the driver marker from the screen
+        //Remove the markers and the driver marker from the screen
         if(pickupMarker != null){
             pickupMarker.remove();
         }
